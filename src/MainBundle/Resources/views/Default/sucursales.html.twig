@@ -14,7 +14,7 @@
                                     <select id="eleccion-sucursal" name="sucursal" required="required" class="select2" style="width:100%">
                                         <option value="">Elige una sucursal</option>    
                                         {% for sucursal in sucursales %}
-                                            <option value="{{ sucursal.nombreBd }}">{{ sucursal.nombre }}</option>
+                                            <option value="{{ sucursal.id }}">{{ sucursal.nombre }}</option>
                                         {% endfor %}
                                     </select><br><br>
                                     <div class="form-group">

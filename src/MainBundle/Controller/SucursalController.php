@@ -231,7 +231,7 @@ class SucursalController extends Controller
         
         $usuario = $this->getUser();
         $entity = $em->getRepository('UserBundle:User')->find($usuario ->getId());
-        $entity ->setNombreBd($sucursal);
+        $entity ->setSucursal($sucursal);
         
         $userManager->updateUser($entity);
 
