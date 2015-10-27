@@ -32,11 +32,14 @@ class User extends BaseUser
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $lastname;
-
+    
     /**
-     * @ORM\Column(type="string", length=100, nullable=true, name="nombre_bd")
+     *
+     * @ORM\ManyToOne(targetEntity="MainBundle\Entity\Sucursal", inversedBy="user")
+     * @ORM\JoinColumn(name="sucursal_id", referencedColumnName="id", nullable = true)
+     * 
      */
-    private $nombreBd;
+    private $sucursal;
     
     /**
      * @ORM\ManyToMany(targetEntity="UserBundle\Entity\Group")
@@ -51,6 +54,7 @@ class User extends BaseUser
     {
         parent::__construct();
         $this->groups = new ArrayCollection();
+        $this->sucursal = new ArrayCollection();
     }
 
     /**
@@ -109,26 +113,26 @@ class User extends BaseUser
         return $this->lastname;
     }
     
-    /**
-     * Set nombreBd
+     /**
+     * Set sucursal
      *
-     * @param string $nombreBd
+     * @param \MainBundle\Entity\Sucursal $sucursal
      * @return User
      */
-    public function setNombreBd($nombreBd)
+    public function setSucursal(\MainBundle\Entity\Sucursal $sucursal)
     {
-        $this->nombreBd = $nombreBd;
+        $this->sucursal = $sucursal;
 
         return $this;
     }
 
     /**
-     * Get nombreBd
+     * Get sucursal
      *
-     * @return string 
+     * @return \MainBundle\Entity\Sucursal 
      */
-    public function getNombreBd()
+    public function getSucursal()
     {
-        return $this->nombreBd;
+        return $this->sucursal;
     }
 }

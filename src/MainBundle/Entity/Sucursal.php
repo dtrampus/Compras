@@ -34,7 +34,11 @@ class Sucursal
      * @ORM\Column(name="nombre_bd", type="string", length=255)
      */
     private $nombreBd;
-
+    
+    /**
+     * @ORM\OneToMany(targetEntity="UserBundle\Entity\User", mappedBy="sucursal")
+     */
+    protected $sucursales;
 
     /**
      * Get id
@@ -90,5 +94,38 @@ class Sucursal
     public function getNombreBd()
     {
         return $this->nombreBd;
+    }
+    
+    /**
+     * Add user
+     *
+     * @param \UserBundle\Entity\User $user
+     * @return Sucursal
+     */
+    public function addUser(\UserBundle\Entity\User $user)
+    {
+        $this->user[] = $user;
+
+        return $this;
+    }
+
+    /**
+     * Remove user
+     *
+     * @param \UserBundle\Entity\User $user
+     */
+    public function removeUser(\UserBundle\Entity\User $user)
+    {
+        $this->user->removeElement($user);
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }
