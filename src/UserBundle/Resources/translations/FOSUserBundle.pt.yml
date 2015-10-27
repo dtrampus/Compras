@@ -1,0 +1,128 @@
+# Group
+group:
+    edit:
+        submit: Atualizar Grupo
+    show:
+        name: Nome do Grupo
+    new:
+        submit: Criar Grupo
+    flash:
+        updated: O grupo foi atualizado
+        created: O grupo foi criado
+        deleted: O grupo foi apagado
+
+# Security
+security:
+    login:
+        username: "Nome de usuário:"
+        password: "Senha:"
+        remember_me: Lembrar-me
+        submit: Entrar
+        home: Casa
+        login: Conecte-se
+        register:
+            now: "Cadastre-se <em>Agora</em>"
+            description: Acesse a possibilidade de contratar passeios diferentes.
+            button: Eu cadastre-se
+
+# Profile
+profile:
+    show:
+        username: Nome de usuário
+        email: Email
+        firstname: Nome
+        lastname: Sobrenome
+        hotel: Hotel
+        room: Quarto
+        title: Informação do usuário
+        person: Pessoa
+        location: Localização
+        groups: Grupos
+    edit:
+        submit: Atualizar conta
+        title: Formulário de edição do usuário
+    flash:
+       updated: O perfil foi atualizado
+
+# Password change
+change_password:
+    submit: Mudar a senha
+    flash:
+        success: A senha foi alterada
+    title: Formulário de alteração de senha
+
+# Registration
+registration:
+    check_email: Foi enviado um email para %email%. Este contém um link de ativação que terá de visitar para ativar a sua conta.
+    confirmed: Parabéns %username%, a sua conta foi confirmada.
+    back: Voltar para a página anterior.
+    submit: Registar
+    flash:
+        user_created: O utilizador foi criado com sucesso
+    email:
+        subject: Bem-vindo(a) %username%!
+        message: |
+            Olá %username%!
+
+            Para completar a validação da sua conta, por favor visite o seguinte link: %confirmationUrl%
+
+            Cumprimentos,
+            A equipa.
+
+# Password resetting
+resetting:
+    password_already_requested: Uma password para este utilizador já foi requisitada nas últimas 24 horas.
+    check_email: Foi enviado um email para %email% com a informação necessária para recuperar a sua password.
+    request:
+        invalid_username: O username ou email "%username%" não existe.
+        username: "Utilizador:"
+        submit: Recuperar password
+    reset:
+        submit: Alterar password
+    flash:
+        success: A password foi recuperada com sucesso
+    email:
+        subject: Recuperar password
+        message: |
+            Olá %username%!
+
+            Para recuperar a password, por favor visite o seguinte link: %confirmationUrl%
+
+            Cumprimentos,
+            A equipa.
+
+# Global strings
+layout:
+    logout: Sair
+    login: Entrar
+    register: Registar
+    logged_in_as: Entrou como %username%
+    register: Register
+    my_account: Minha Conta
+    edit: Editar
+    change_password: Alterar A Senha
+    purchases: Compras
+    groups: Grupos
+    create_group: Criar Grupo
+    users: Usuários
+    create_user: Criar Usuário
+
+# Form field labels
+form:
+    group_name: "Nome do Grupo:"
+    username: "Nome de usuário:"
+    email: "Email:"
+    current_password: "Senha atual:"
+    password: "Senha:"
+    password_confirmation: "Verificar:"
+    new_password: "Nova password:"
+    new_password_confirmation: "Verificar:"
+    firstname: "Nome:"
+    lastname: "Sobrenome:"
+    groups: "Grupos:"
+
+breadcrumb:
+    home: Casa
+    my_account: Minha Conta
+    edit: Editar
+    change_password: Alterar a senha

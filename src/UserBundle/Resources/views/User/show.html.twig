@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+            <h1 class="page-title txt-color-blueDark"><i class="fa fa-desktop fa-fw "></i> Gestión de Usuarios <span>&gt; Mostrar Usuario </span></h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <article class="col-sm-12 col-md-12 col-lg-12">
+            {% for flashMessage in app.session.flashbag.get('success') %}
+                <div class="alert alert-success fade in">
+                    <button class="close" data-dismiss="alert">×</button>
+                    <i class="fa-fw fa fa-check"></i>
+                    <strong>Éxito:</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+            <div class="jarviswidget" id="wid-id-8" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+                <!-- widget options:
+                usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                data-widget-colorbutton="false"
+                data-widget-editbutton="false"
+                data-widget-togglebutton="false"
+                data-widget-deletebutton="false"
+                data-widget-fullscreenbutton="false"
+                data-widget-custombutton="false"
+                data-widget-collapsed="true"
+                data-widget-sortable="false"
+
+                -->
+                <header>
+                    <h2>Usuario</h2>
+                    <ul class="nav nav-tabs pull-right in">
+
+                        <li class="active">
+
+                            <a data-toggle="tab" href="#hb1"> <i class="fa fa-lg fa-align-left"></i> <span class="hidden-mobile hidden-tablet"> Información Básica </span> </a>
+
+                        </li>
+
+                        <li>
+                            <a data-toggle="tab" href="#hb2"> <i class="fa fa-lg fa-list-ul"></i> <span class="hidden-mobile hidden-tablet"> Grupos </span> </a>
+                        </li>
+
+                    </ul>
+                </header>
+
+                <!-- widget div-->
+                <div>
+
+                    <!-- widget edit box -->
+                    <div class="jarviswidget-editbox">
+                        <!-- This area used as dropdown edit box -->
+
+                    </div>
+                    <!-- end widget edit box -->
+
+                    <!-- widget content -->
+                    <div class="widget-body">
+
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="hb1">
+                                <p>Email: {{ entity.email }}</p>
+                                <p>Nombre de Usuario: {{ entity.username }}</p>
+                                <p>Nombre: {{ entity.firstname }}</p>
+                                <p>Apellido: {{ entity.lastname }}</p>
+                            </div>
+                            <div class="tab-pane" id="hb2">
+                                <ul class="list-group">
+                                    {% for group in entity.groups %}
+                                        <li class="list-group-item"><a href="{{ path('fos_user_group_show', {'groupName': group.getName()} ) }}">{{ group.getName() }}</a></li>
+                                        {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <hr class="simple">
+                        
+                        <a href="{{ path('user_list') }}" class="btn btn-default">Volver</a>
+                        {% if entity.username != 'admin' %}
+                            <a href="{{ path('user_edit', { 'id': entity.id }) }}" class="btn btn-primary pull-right">Editar</a>
+                            <button class="btn btn-danger pull-right margin-right-5" data-toggle="modal" data-target="#deleteModal">Eliminar</button>
+                        {% endif %}
+                    </div>
+                    <!-- end widget content -->
+
+                </div>
+                <!-- end widget div -->
+            </div>
+        </article>
+    </div>
+
+    {{ form_start(delete_form) }}
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmación de eliminación</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Está seguro que desea eliminar el registro?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <input class="btn btn-danger pull-right" type="submit" value="Eliminar" />
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    {{ form_end(delete_form) }}
+
+{% endblock %}

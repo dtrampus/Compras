@@ -1,0 +1,33 @@
+# app/config/security.yml -FosUserBundle
+security:
+    encoders:
+        FOS\UserBundle\Model\UserInterface: sha512
+
+    role_hierarchy:
+        ROLE_OPERATOR:    ROLE_USER
+        ROLE_SUPERVISOR:  ROLE_OPERATOR
+        ROLE_ADMIN:       ROLE_SUPERVISOR
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username_email
+
+    firewalls:
+        main:
+            pattern: ^/
+            form_login:
+                provider: fos_userbundle
+                csrf_provider: form.csrf_provider
+                login_path: /login
+                always_use_default_target_path: true
+                default_target_path: /sucursales
+            logout:       true
+            anonymous:    true                
+
+    access_control:
+        - { path: ^/$, role: IS_AUTHENTICATED_FULLY }
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/profile, role: IS_AUTHENTICATED_FULLY }
+        - { path: ^/group, role: ROLE_ADMIN }
+        - { path: ^/user, role: ROLE_ADMIN }

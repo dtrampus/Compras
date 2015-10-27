@@ -1,0 +1,22 @@
+user_list:
+    path:     /
+    defaults: { _controller: "UserBundle:User:index" }
+
+user_show:
+    path:     /{id}/show
+    defaults: { _controller: "UserBundle:User:show" }
+
+user_new:
+    path:     /new
+    defaults: { _controller: "UserBundle:User:new" }
+    requirements: { _method: post|put|get }
+
+user_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "UserBundle:User:edit" }
+    requirements: { _method: post|put|get }
+
+user_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "UserBundle:User:delete" }
+    requirements: { _method: post|delete }

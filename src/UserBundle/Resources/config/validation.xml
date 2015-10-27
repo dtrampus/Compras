@@ -1,0 +1,51 @@
+<?xml version="1.0" ?>
+<constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
+        http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+
+    <class name="UserBundle\Entity\User">
+        
+        <property name="firstname">
+            <constraint name="NotBlank">
+                <option name="message">fosuser.firstname.blank</option>
+                <option name="groups">
+                    <value>RegistrationFosUser</value>
+                    <value>ProfileFosUser</value>
+                </option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">2</option>
+                <option name="minMessage">fosuser.firstname.short</option>
+                <option name="max">100</option>
+                <option name="maxMessage">fosuser.firstname.long</option>
+                <option name="groups">
+                    <value>RegistrationFosUser</value>
+                    <value>ProfileFosUser</value>
+                </option>
+            </constraint>
+        </property>
+        
+        <property name="lastname">
+            <constraint name="NotBlank">
+                <option name="message">fosuser.lastname.blank</option>
+                <option name="groups">
+                    <value>RegistrationFosUser</value>
+                    <value>ProfileFosUser</value>
+                </option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">2</option>
+                <option name="minMessage">fosuser.lastname.short</option>
+                <option name="max">100</option>
+                <option name="maxMessage">fosuser.lastname.long</option>
+                <option name="groups">
+                    <value>RegistrationFosUser</value>
+                    <value>ProfileFosUser</value>
+                </option>
+            </constraint>
+        </property>
+      
+    </class>
+
+</constraint-mapping>

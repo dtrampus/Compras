@@ -1,0 +1,24 @@
+.smart-style-4 #header>:first-child {
+    background: none;
+}
+.smart-style-4 aside .minifyme {
+  background: #2C6EA8;
+}
+.smart-style-4 aside .minifyme:hover {
+    background-color: #275b89;
+}
+@media (max-width:979px){
+    .smart-style-4 #header{
+        background: white;
+    }
+    .smart-style-4 .btn-header.transparent a{
+        color: #6D6A69!important;
+    }
+}
+.jarviswidget .widget-body {
+    min-height: 0px;
+}
+
+hr{
+    border-top: 1px solid #B6B7BB;
+}

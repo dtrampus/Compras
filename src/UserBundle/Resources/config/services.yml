@@ -1,0 +1,31 @@
+services:
+    user.registration.form.type:
+        class: UserBundle\Form\Type\RegistrationFormType
+        arguments: ["@security.context"]
+        tags:
+            - { name: form.type, alias: user_registration }
+            
+    user.profile.form.type:
+        class: UserBundle\Form\Type\ProfileFormType
+        tags:
+            - { name: form.type, alias: user_profile }
+            
+    form.type.permission:
+        class: UserBundle\Form\Type\PermissionType
+        arguments:
+          - "@service_container"
+        tags:
+          - { name: form.type, alias: permissionType }
+          
+    user.group.form.type:
+        class: UserBundle\Form\Type\GroupFormType
+        tags:
+            - { name: form.type, alias: user_group }
+            
+    user.security.login_manager:
+        class: FOS\UserBundle\Security\LoginManager
+        arguments: 
+            - "@security.context"
+            - "@security.user_checker"
+            - "@security.authentication.session_strategy"
+            - "@service_container"

@@ -1,0 +1,11 @@
+main_sucursal:
+    resource: "@MainBundle/Resources/config/routing/sucursal.yml"
+    prefix:   /sucursal
+
+main_home:
+    path:     /
+    defaults: { _controller: MainBundle:Default:index }
+    
+main_sucursales:
+    path:     /sucursales
+    defaults: { _controller: MainBundle:Default:sucursales }
