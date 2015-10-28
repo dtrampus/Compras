@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>No tienes los permisos para ingresar a esta sección.</h1>
+
+    {# example security usage, see below #}
+    {% if app.user and is_granted('IS_AUTHENTICATED_FULLY') %}
+        {# ... #}
+    {% endif %}
+
+    <p>
+        No se puede acceder a la página solicitada.<a href="{{ path('main_home') }}"> Volver al inicio</a>.
+    </p>
+{% endblock %}

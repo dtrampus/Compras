@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+            <h1 class="page-title txt-color-blueDark"><i class="fa fa-desktop fa-fw "></i> Mi cuenta <span>&gt; Mostrar </span></h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <article class="col-sm-12 col-md-12 col-lg-12">
+            {% for flashMessage in app.session.flashbag.get('success') %}
+                <div class="alert alert-success fade in">
+                    <button class="close" data-dismiss="alert">×</button>
+                    <i class="fa-fw fa fa-check"></i>
+                    <strong>Éxito:</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            
+            <div class="jarviswidget" id="wid-id-8" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+                <!-- widget options:
+                usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                data-widget-colorbutton="false"
+                data-widget-editbutton="false"
+                data-widget-togglebutton="false"
+                data-widget-deletebutton="false"
+                data-widget-fullscreenbutton="false"
+                data-widget-custombutton="false"
+                data-widget-collapsed="true"
+                data-widget-sortable="false"
+
+                -->
+                <header>
+                    <h2>Mi Cuenta</h2>
+                    <ul class="nav nav-tabs pull-right in">
+
+                        <li class="active">
+
+                            <a data-toggle="tab" href="#hb1"> <i class="fa fa-lg fa-align-left"></i> <span class="hidden-mobile hidden-tablet"> Información Básica </span> </a>
+
+                        </li>
+
+                        <li>
+                            <a data-toggle="tab" href="#hb2"> <i class="fa fa-lg fa-list-ul"></i> <span class="hidden-mobile hidden-tablet"> Grupos </span> </a>
+                        </li>
+
+                    </ul>
+                </header>
+
+                <!-- widget div-->
+                <div>
+
+                    <!-- widget edit box -->
+                    <div class="jarviswidget-editbox">
+                        <!-- This area used as dropdown edit box -->
+
+                    </div>
+                    <!-- end widget edit box -->
+
+                    <!-- widget content -->
+                    <div class="widget-body">
+
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="hb1">
+                                <p>Email: {{ user.email }}</p>
+                                <p>Nombre de Usuario: {{ user.username }}</p>
+                                <p>Nombre: {{ user.firstname }}</p>
+                                <p>Apellido: {{ user.lastname }}</p>
+                            </div>
+                            <div class="tab-pane" id="hb2">
+                                <ul class="list-group">
+                                    {% for group in user.groups %}
+                                        <li class="list-group-item"><a href="{{ path('fos_user_group_show', {'groupName': group.getName()} ) }}">{{ group.getName() }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <hr class="simple">
+                        
+                        <a href="{{ path('main_home') }}" class="btn btn-default">Volver</a>
+                        <a href="{{ path('fos_user_profile_edit') }}" class="btn btn-primary pull-right">Editar</a>
+                        <a href="{{ path('fos_user_change_password') }}" class="btn btn-primary pull-right margin-right-5">Cambiar Contraseña</a>                  
+
+                    </div>
+                    <!-- end widget content -->
+
+                </div>
+                <!-- end widget div -->
+            </div>
+        </article>
+    </div>    
+{% endblock %}

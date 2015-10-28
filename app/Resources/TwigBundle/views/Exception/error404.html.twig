@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Página no encontrada</h1>
+
+    {# example security usage, see below #}
+    {% if app.user and is_granted('IS_AUTHENTICATED_FULLY') %}
+        {# ... #}
+    {% endif %}
+
+    <p>
+        <a href="{{ path('main_home') }}">Volver al inicio.</a>
+    </p>
+{% endblock %}
