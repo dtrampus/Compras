@@ -54,13 +54,24 @@ assetic:
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   pdo_mysql
-        host:     "%database_host%"
-        port:     "%database_port%"
-        dbname:   "%database_name%"
-        user:     "%database_user%"
-        password: "%database_password%"
-        charset:  UTF8
+        default_connection:   default
+        connections:
+            default:
+                driver:   pdo_mysql
+                host:     "%database_host%"
+                port:     "%database_port%"
+                dbname:   "%database1_name%"
+                user:     "%database_user%"
+                password: "%database_password%"
+                charset:  UTF8
+            dinamica:
+                driver:   pdo_mysql
+                host:     "%database_host%"
+                port:     "%database_port%"
+                dbname:   "%database2_name%"
+                user:     "%database_user%"
+                password: "%database_password%"
+                charset:  UTF8
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml
         #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
@@ -69,9 +80,21 @@ doctrine:
         #     path:     "%database_path%"
 
     orm:
+        default_entity_manager:   default
+        entity_managers:
+            default:
+                connection:       default
+                mappings:
+                    MainBundle: ~
+                    UserBundle: ~
+            sucursal_1:
+                connection:       dinamica
+                mappings:
+                    MainBundle: ~
+                    
         auto_generate_proxy_classes: "%kernel.debug%"
-        naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: true
+        #naming_strategy: doctrine.orm.naming_strategy.underscore
+        #auto_mapping: true
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -106,8 +129,3 @@ services:
         arguments:
             - "mysql:dbname=db_verasur"
             - { db_table: sessions, db_username: root, db_password: 123456 }
-    bdDinamica:
-        class: MainBundle\Services\servicioBdDinamica
-        arguments: 
-            - @service_container
-            

@@ -2,7 +2,7 @@
 <html>
     <head>
         {% block head %}
-            <title>{% block title %}Siga{% endblock %}</title>
+            <title>{% block title %}Quinoa{% endblock %}</title>
 
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -375,122 +375,22 @@
                             </ul>
                         </li>
                         {% endif %}
-                        {% if app.user and is_granted('ROLE_SUPERVISOR') %}
                         <li>
-                            <a href="#"><i class="fa fa-lg fa-fw fa fa-truck"></i> <span class="menu-item-parent">Gestión de Proveedores</span></a>
+                            <a href="#"><i class="fa fa-shopping-cart"></i> <span class="menu-item-parent">Gestión de Compras</span></a>
                             <ul>
                                 <li>
-                                    <a href="{{ path('provider') }}">Listado de Proveedores</a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('provider_new') }}">Crear Proveedor</a>
+                                    <a href="{{ path ('compra') }}">Nueva Compra</a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-lg fa-fw fa fa-male"></i> <span class="menu-item-parent">Gestión de Clientes</span></a>
+                            <a href="#"><i class="fa fa-file-text-o"></i> <span class="menu-item-parent">Informes</span></a>
                             <ul>
                                 <li>
-                                    <a href="{{ path('client') }}">Listado de Clientes</a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('client_new') }}">Crear Cliente</a>
+                                    <a href="{{ path ('inventario') }}">Inventario</a>
                                 </li>
                             </ul>
                         </li>
-                        <li>
-                            <a href="#"><i class="fa fa-lg fa-fw fa fa-truck"></i> <span class="menu-item-parent">Gestión de Transporte</span></a>
-                            <ul>
-                                <li>
-                                    <a href="{{ path('transport') }}">Listado de Transporte</a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('transport_new') }}">Carga de Transporte</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-lg fa-fw fa fa-car"></i> <span class="menu-item-parent">Gestión de Choferes</span></a>
-                            <ul>
-                                <li>
-                                    <a href="{{ path('driver') }}">Listado de Choferes</a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('driver_new') }}">Carga de Choferes</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-lg fa-fw fa fa-cubes"></i> <span class="menu-item-parent">Gestión de Productos</span></a>
-                            <ul>
-                                <li>
-                                    <a href="{{ path('product') }}">Listado de Productos</a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('product_new') }}">Carga de Productos</a>
-                                </li>
-                            </ul>
-                        </li>
-                        {% endif %}
-                        <li>
-                            <a href="#"><i class="fa fa-lg fa-fw fa fa-database"></i> <span class="menu-item-parent">Gestión de Tanques</span></a>
-                            <ul>
-                                <li>
-                                    <a href="{{ path('tank') }}">Listado de Tanques</a>
-                                </li>
-                                {% if app.user and is_granted('ROLE_SUPERVISOR') %}
-                                <li>
-                                    <a href="{{ path('tank_new') }}">Carga de Tranques</a>
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-lg fa-fw fa fa-sign-in"></i> <span class="menu-item-parent">Gestión de Ingresos</span></a>
-                            <ul>
-                                <li>
-                                    <a href="{{ path('ingress') }}">Listado de Ingresos</a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('ingress_new') }}">Carga de Ingresos</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-lg fa-fw fa fa-share-square-o"></i> <span class="menu-item-parent">Gestión de Pases</span></a>
-                            <ul>
-                                <li>
-                                    <a href="{{ path('pass') }}">Listado de Pases</a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('pass_new') }}">Carga de Pases</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-lg fa-fw fa fa-sign-out"></i> <span class="menu-item-parent">Gestión de Egresos</span></a>
-                            <ul>
-                                <li>
-                                    <a href="{{ path('egress') }}">Listado de Egresos</a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('egress_new') }}">Carga de Egresos</a>
-                                </li>
-                            </ul>
-                        </li>
-                        {% if app.user and is_granted('ROLE_SUPERVISOR') %}
-                        <li>
-                            <a href="#"><i class="fa fa-lg fa-fw fa fa-file-text"></i> <span class="menu-item-parent">Informes</span></a>
-                            <ul>
-                                <li>
-                                    <a href="{{ path('report_inventory_index') }}">Inventario</a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('report_tank_index') }}">Movimientos</a>
-                                </li>
-                            </ul>
-                        </li>
-                        {% endif %}
 {#                        <li>
                             <a href="inbox.html"><i class="fa fa-lg fa-fw fa-inbox"></i> <span class="menu-item-parent">Inbox</span><span class="badge pull-right inbox-badge">14</span></a>
                         </li>
@@ -1034,7 +934,6 @@
                                           'SmartAdmin/js/app.min.js'
                                           'SmartAdmin/js/libs/jquery-ui.datepicker.es.js'
                                           'SmartAdmin/js/plugin/select2/select2.min.js'
-                                          'SmartAdmin/js/plugin/jquery-validate/jquery.validate.min.js'
                 %}
                 <script src="{{ asset_url }}" type="text/javascript"></script>
                 <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>

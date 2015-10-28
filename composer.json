@@ -21,7 +21,8 @@
         "friendsofsymfony/user-bundle": "~2.0@dev",
         "liuggio/excelbundle": "^2.0",
         "mpdf/mpdf": "^6.0",
-        "friendsofsymfony/jsrouting-bundle": "^1.5"
+        "friendsofsymfony/jsrouting-bundle": "^1.5",
+        "symfony/serializer": "^2.7"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

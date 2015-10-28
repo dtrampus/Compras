@@ -1,0 +1,3 @@
+compra:
+    path:     /
+    defaults: { _controller: "MainBundle:Compra:index" }
