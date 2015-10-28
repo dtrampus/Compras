@@ -9,3 +9,11 @@ main_home:
 main_sucursales:
     path:     /sucursales
     defaults: { _controller: MainBundle:Default:sucursales }
+    
+main_compra:
+    resource: "@MainBundle/Resources/config/routing/compra.yml"
+    prefix:   /compra
+    
+main_inventario:
+    resource: "@MainBundle/Resources/config/routing/inventario.yml"
+    prefix:   /inventario

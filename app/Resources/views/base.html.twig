@@ -2,7 +2,7 @@
 <html>
     <head>
         {% block head %}
-            <title>{% block title %}Verasur{% endblock %}</title>
+            <title>{% block title %}Quinoa{% endblock %}</title>
 
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -376,13 +376,18 @@
                         </li>
                         {% endif %}
                         <li>
-                            <a href="#"><i class="fa fa-lg fa-fw fa fa-group"></i> <span class="menu-item-parent">Ventas</span></a>
+                            <a href="#"><i class="fa fa-shopping-cart"></i> <span class="menu-item-parent">Gestión de Compras</span></a>
                             <ul>
                                 <li>
-                                    <a href="#">Crear Venta</a>
+                                    <a href="{{ path ('compra') }}">Nueva Compra</a>
                                 </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-file-text-o"></i> <span class="menu-item-parent">Informes</span></a>
+                            <ul>
                                 <li>
-                                    <a href="#">Inventario</a>
+                                    <a href="{{ path ('inventario') }}">Inventario</a>
                                 </li>
                             </ul>
                         </li>

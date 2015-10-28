@@ -7,18 +7,9 @@
 
             <!-- NEW WIDGET START -->
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <h2>Usted se encuentra en la sucursal {{ app.user.getSucursal().getNombre() }}.</h2>
+                <h2>Usted se encuentra en la sucursal {{ app.user.getSucursal().getNombre() }}.</h2><br>
+                <h3><a href="{{ path ('main_sucursales') }}">Cambiar Sucursal</a></h3>
             </article>
         </div>
     </section>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    {% javascripts 'SmartAdmin/js/plugin/morris/morris.min.js'
-                   'SmartAdmin/js/plugin/morris/raphael.min.js'
-    %}
-    <script src="{{ asset_url }}" type="text/javascript"></script>
-    {% endjavascripts %}
-
 {% endblock %}

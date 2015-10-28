@@ -35,7 +35,7 @@ class User extends BaseUser
     
     /**
      *
-     * @ORM\ManyToOne(targetEntity="MainBundle\Entity\Sucursal", inversedBy="user")
+     * @ORM\ManyToOne(targetEntity="MainBundle\Entity\Sucursal")
      * @ORM\JoinColumn(name="sucursal_id", referencedColumnName="id", nullable = true)
      * 
      */
@@ -54,7 +54,6 @@ class User extends BaseUser
     {
         parent::__construct();
         $this->groups = new ArrayCollection();
-        $this->sucursal = new ArrayCollection();
     }
 
     /**

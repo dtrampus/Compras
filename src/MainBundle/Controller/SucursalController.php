@@ -224,17 +224,18 @@ class SucursalController extends Controller
     
     public function seleccionarAction(Request $request)
     {
-        $sucursal = $request->request->get('sucursal');
+        $sucursalId = $request->request->get('sucursal');
         
         $em = $this->getDoctrine()->getManager();
         $userManager = $this->get('fos_user.user_manager');
         
         $usuario = $this->getUser();
         $entity = $em->getRepository('UserBundle:User')->find($usuario ->getId());
-        $entity ->setSucursal($sucursal);
+        $sucursal = $em->getRepository('MainBundle:Sucursal')->find($sucursalId);
+        $entity->setSucursal($sucursal);
         
         $userManager->updateUser($entity);
-
+        
         return $this->redirect($this->generateUrl('main_home'));
     }
 }
