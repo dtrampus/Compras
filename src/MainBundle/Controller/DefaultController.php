@@ -22,8 +22,12 @@ class DefaultController extends Controller
 //       $stmt->execute();
 //       $rResultFilteres = $stmt->fetch();
        
-       
-        return $this->render('MainBundle:Default:index.html.twig');
+        $stmt = $this->getDoctrine()->getManager("dinamica")->getConnection()->prepare("select * from db_principal.blmercaderia, blcompras;");
+        $stmt->execute();
+        $rResultFilteres = $stmt->fetch();
+        return $this->render('MainBundle:Default:index.html.twig',array(
+            "resultado" => $rResultFilteres
+        ));
     }
     
     public function sucursalesAction(){
