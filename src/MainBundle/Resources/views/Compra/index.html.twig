@@ -1,10 +1,173 @@
 {% extends "base.html.twig" %}
 
 {% block content %}
-    <section id="widget-grid" class="">
-        <!-- row -->
-        <div class="row">
-
+    <div class="row">
+        <!-- col -->
+        <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+                <h1 class="page-title txt-color-blueDark"><i class="fa fa-shopping-cart"></i> Gestión de Compras <span>>
+                        Nueva Compra </span></h1>
         </div>
+        <!-- end col -->
+    </div>
+    <!-- widget grid -->
+    <section id="widget-grid" class="">
+            <!-- row -->
+            <div class="row">
+                    <!-- NEW WIDGET START -->
+                    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="jarviswidget jarviswidget-color-white" id="wid-id-0" data-widget-editbutton="false">
+                            <header>
+                                <span class="widget-icon"> <i class="fa fa-shopping-cart"></i> </span>
+                                <h2> Compra </h2>
+                            </header>
+                            <div>
+                                <div class="jarviswidget-editbox">
+                                    <!-- This area used as dropdown edit box -->
+                                </div>
+                                <div class="widget-body no-padding">
+                                    <div class="widget-body-toolbar">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                                                <div class="form-group">
+                                                    <label class="col-md-2 control-label" style="padding-top: 7px;">Fecha:</label>
+                                                    <div class="col-md-10">
+                                                        <input class="form-control datepicker filters" id="date" type="text" data-dateformat="dd/mm/yy" value="{{ "now"|date("d/m/Y")}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label" style="padding-top: 7px;">Proveedor:</label>
+                                                    <div class="col-md-9">
+                                                        <select id="proveedor" class="filters" style="width:100%">
+                                                            <option value="">Ingrese un proveedor...</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label" style="padding-top: 7px;">Rubro:</label>
+                                                    <div class="col-md-9">
+                                                        <select id="rubro" class="filters" style="width:100%">
+                                                            <option value="">Ingrese un rubro...</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <table id="jqgrid"></table>
+                                    <div id="pjqgrid"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <!-- WIDGET END -->
+            </div>
+            <!-- end row -->
     </section>
+    <!-- end widget grid -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts 'SmartAdmin/js/plugin/jqgrid/jquery.jqGrid.js'
+                   'SmartAdmin/js/plugin/jqgrid/grid.locale-es.min.js'%}
+        <script src="{{ asset_url }}" type="text/javascript"></script>
+    {% endjavascripts %}
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#proveedor, #rubro').select2();
+            var jqgrid_data = [{
+                    cant : "1",
+                    insumo : "2007-10-01",
+                    rubro : "test",
+                    precioUnitario : "note",
+                    precioTotal : "200.00"
+            }, {
+                    cant : "18",
+                    insumo : "2007-09-01",
+                    rubro : "test3",
+                    precioUnitario : "note3",
+                    precioTotal : "400.00"
+            }];
+
+            jQuery("#jqgrid").jqGrid({
+                    data : jqgrid_data,
+                    datatype : "local",
+                    height : 'auto',
+                    colNames : ['Cantidad', 'Insumo', 'Rubro', 'Precio unitario', 'Precio total'],
+                    colModel : [{
+                            name : 'cant',
+                            index : 'cant',
+                            editable : true
+                    }, {
+                            name : 'insumo',
+                            index : 'insumo'
+                    }, {
+                            name : 'rubro',
+                            index : 'rubro'
+                    }, {
+                            name : 'precioUnitario',
+                            index : 'precioUnitario',
+                            align : "right",
+                            editable : true
+                    }, {
+                            name : 'precioTotal',
+                            index : 'precioTotal',
+                            align : "right",
+                            editable : true
+                    }],
+                    rowNum : 10,
+                    rowList : [10, 20, 30],
+                    pager : '#pjqgrid',
+                    sortname : 'id',
+                    toolbarfilter : true,
+                    viewrecords : true,
+                    sortorder : "asc",
+                    editurl : "dummy.html",
+                    autowidth : true,
+
+            });
+            // remove classes
+            $(".ui-jqgrid").removeClass("ui-widget ui-widget-content");
+            $(".ui-jqgrid-view").children().removeClass("ui-widget-header ui-state-default");
+            $(".ui-jqgrid-labels, .ui-search-toolbar").children().removeClass("ui-state-default ui-th-column ui-th-ltr");
+            $(".ui-jqgrid-pager").removeClass("ui-state-default");
+            $(".ui-jqgrid").removeClass("ui-widget-content");
+
+            // add classes
+            $(".ui-jqgrid-htable").addClass("table table-bordered table-hover");
+            $(".ui-jqgrid-btable").addClass("table table-bordered table-striped");
+
+            $(".ui-pg-div").removeClass().addClass("btn btn-sm btn-primary");
+            $(".ui-icon.ui-icon-plus").removeClass().addClass("fa fa-plus");
+            $(".ui-icon.ui-icon-pencil").removeClass().addClass("fa fa-pencil");
+            $(".ui-icon.ui-icon-trash").removeClass().addClass("fa fa-trash-o");
+            $(".ui-icon.ui-icon-search").removeClass().addClass("fa fa-search");
+            $(".ui-icon.ui-icon-refresh").removeClass().addClass("fa fa-refresh");
+            $(".ui-icon.ui-icon-disk").removeClass().addClass("fa fa-save").parent(".btn-primary").removeClass("btn-primary").addClass("btn-success");
+            $(".ui-icon.ui-icon-cancel").removeClass().addClass("fa fa-times").parent(".btn-primary").removeClass("btn-primary").addClass("btn-danger");
+
+            $(".ui-icon.ui-icon-seek-prev").wrap("<div class='btn btn-sm btn-default'></div>");
+            $(".ui-icon.ui-icon-seek-prev").removeClass().addClass("fa fa-backward");
+
+            $(".ui-icon.ui-icon-seek-first").wrap("<div class='btn btn-sm btn-default'></div>");
+            $(".ui-icon.ui-icon-seek-first").removeClass().addClass("fa fa-fast-backward");
+
+            $(".ui-icon.ui-icon-seek-next").wrap("<div class='btn btn-sm btn-default'></div>");
+            $(".ui-icon.ui-icon-seek-next").removeClass().addClass("fa fa-forward");
+
+            $(".ui-icon.ui-icon-seek-end").wrap("<div class='btn btn-sm btn-default'></div>");
+            $(".ui-icon.ui-icon-seek-end").removeClass().addClass("fa fa-fast-forward");
+
+        })
+
+        $(window).on('resize.jqGrid', function() {
+                $("#jqgrid").jqGrid('setGridWidth', $("#content").width());
+        })
+    </script>
 {% endblock %}
