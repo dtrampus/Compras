@@ -68,7 +68,7 @@ doctrine:
                 driver:   pdo_mysql
                 host:     "%database_host%"
                 port:     "%database_port%"
-                dbname:   "%database2_name%"
+                dbname:   ""
                 user:     "%database_user%"
                 password: "%database_password%"
                 charset:  UTF8
@@ -87,7 +87,7 @@ doctrine:
                 mappings:
                     MainBundle: ~
                     UserBundle: ~
-            sucursal_1:
+            dinamica:
                 connection:       dinamica
                 mappings:
                     MainBundle: ~
@@ -129,3 +129,12 @@ services:
         arguments:
             - "mysql:dbname=db_verasur"
             - { db_table: sessions, db_username: root, db_password: 123456 }
+    bdDinamica:
+        class: MainBundle\Services\servicioBdDinamica
+        arguments: ["@service_container"]
+    app.request_listener:
+       class: MainBundle\EventListener\RequestListener
+       arguments:
+           - @bdDinamica
+       tags:
+           - { name: kernel.event_subscriber }
