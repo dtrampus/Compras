@@ -122,19 +122,3 @@ fos_user:
             type: user_profile
             validation_groups: [Default, ProfileFosUser]
             
-services:
-    session.handler.pdo:
-        class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
-        public:    false
-        arguments:
-            - "mysql:dbname=db_verasur"
-            - { db_table: sessions, db_username: root, db_password: 123456 }
-    bdDinamica:
-        class: MainBundle\Services\servicioBdDinamica
-        arguments: ["@service_container"]
-    app.request_listener:
-       class: MainBundle\EventListener\RequestListener
-       arguments:
-           - @bdDinamica
-       tags:
-           - { name: kernel.event_subscriber }
