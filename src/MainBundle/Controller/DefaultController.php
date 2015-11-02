@@ -8,26 +8,7 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-//        $connectionFactory = $this->container->get('doctrine.dbal.connection_factory');
-//        $connection = $connectionFactory->createConnection(array(
-//            'driver' => 'pdo_mysql',
-//            'user' => 'root',
-//            'password' => '123456',
-//            'host' => 'localhost',
-//            'dbname' => 'db_sucursal1',
-//        ));
-//       
-//       
-//       $stmt = $connection->prepare("select * from db_principal.blmercaderia, blcompras;");
-//       $stmt->execute();
-//       $rResultFilteres = $stmt->fetch();
-       
-        $stmt = $this->getDoctrine()->getManager("dinamica")->getConnection()->prepare("select * from db_principal.blmercaderia, blcompras;");
-        $stmt->execute();
-        $rResultFilteres = $stmt->fetch();
-        return $this->render('MainBundle:Default:index.html.twig',array(
-            "resultado" => $rResultFilteres
-        ));
+        return $this->render('MainBundle:Default:index.html.twig');
     }
     
     public function sucursalesAction(){

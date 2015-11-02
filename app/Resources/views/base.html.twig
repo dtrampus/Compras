@@ -14,6 +14,7 @@
                                 'SmartAdmin/css/smartadmin-production.min.css'
                                 'SmartAdmin/css/smartadmin-skins.min.css'
                                 'SmartAdmin/css/custom.css'
+                                'SmartAdmin/jquery-handsontable/handsontable.full.css'
                                  filter='cssrewrite' %}
                 <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"  />
                 {% endstylesheets %}
@@ -379,7 +380,7 @@
                             <a href="#"><i class="fa fa-shopping-cart"></i> <span class="menu-item-parent">Gestión de Compras</span></a>
                             <ul>
                                 <li>
-{#                                    <a href="{{ path ('compra') }}">Nueva Compra</a>#}
+                                    <a href="{{ path ('compra') }}">Nueva Compra</a>
                                 </li>
                             </ul>
                         </li>
@@ -387,7 +388,7 @@
                             <a href="#"><i class="fa fa-file-text-o"></i> <span class="menu-item-parent">Informes</span></a>
                             <ul>
                                 <li>
-{#                                    <a href="{{ path ('inventario') }}">Inventario</a>#}
+                                    <a href="{{ path ('inventario') }}">Inventario</a>
                                 </li>
                             </ul>
                         </li>
