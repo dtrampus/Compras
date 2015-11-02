@@ -60,20 +60,14 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
-                                        <a class="btn btn-primary" id="editar">Editar</a>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
-                                        <a class="btn btn-primary" id="cancelar">Cancelar</a>
-                                    </div>            
+                                    </div>      
                                     <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
                                         <a class="btn btn-primary" id="guardar">Guardar</a>
                                     </div>
                                 </div>
                             </div>
 
-                            <div id="example6"></div>
+                            <div id="example6" style="width:100%;"></div>
                         </div>
                     </div>
                 </div>
@@ -95,25 +89,27 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#cmbProveedor, #cmbRubro').select2();
-
+            
             var
                     container6 = document.getElementById('example6'),
                     hot6;
 
             hot6 = new Handsontable(container6, {
                 data: [
-                    model({id: 1, name: 'Ted Right', address: ''})
+                    model({id: 1, cantidad: '', insumo: 'Cafe Barista', rubro: 'CAFETERIA', precioUnitario: '', precioTotal: ''})
                 ],
                 dataSchema: model,
-                colHeaders: ['Cantidad', 'Insumo', 'Rubro', 'Precio unitario', 'Precio total'],
+                colHeaders: ['ID', 'Cantidad', 'Insumo', 'Rubro', 'Precio unitario', 'Precio total'],
                 columns: [
-                    {data: property('Cantidad')},
-                    {data: property('Insumo')},
-                    {data: property('Rubro')},
-                    {data: property('Precio unitario')},
-                    {data: property('Precio total')}
+                    {data: property('id')},
+                    {data: property('cantidad')},
+                    {data: property('insumo')},
+                    {data: property('rubro')},
+                    {data: property('precioUnitario')},
+                    {data: property('precioTotal')}
                 ],
-                minSpareRows: 1
+                minSpareRows: 1,
+                stretchH: "all"
             });
 
             function model(opts) {
