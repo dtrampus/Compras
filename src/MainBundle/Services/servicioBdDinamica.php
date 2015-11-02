@@ -29,6 +29,7 @@ class servicioBdDinamica {
                 'password' => $this->containerAware->getParameter('database_password'),
                 'host' => $this->containerAware->getParameter('database_host'),
                 'dbname' => $usuarioLogeado->getSucursal()->getNombreBd(),
+                'charset' => 'UTF8'
             ));
             $this->containerAware->set('doctrine.dbal.dinamica_connection', $connection);
         }

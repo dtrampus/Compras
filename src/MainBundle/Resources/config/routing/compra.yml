@@ -1,3 +1,9 @@
 compra:
     path:     /
     defaults: { _controller: "MainBundle:Compra:index" }
+    
+compra_lista:
+    path:     /lista
+    defaults: { _controller: "MainBundle:Compra:listar" }
+    options:
+        expose: true
