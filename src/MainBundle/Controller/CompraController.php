@@ -41,21 +41,10 @@ class CompraController extends Controller
         $listaCompras = $this->get('main_compra_repositorio')->listarMercaderia($fecha,$rubroId,$proveedorId);
         
         $output = array(
-            "page" => 1,
-            "total" => count($listaCompras),
-            "records" => count($listaCompras),
-            "rows" => array()
+            "data" => array()
         );
-        $i = 1;
         foreach ($listaCompras as $aRow) {
-            $row = array();
-            $row["id"] = $i;
-            $row["cell"] = array();
-            foreach ($aRow as $value) {
-                array_push($row["cell"],$value);
-            }
-            $output['rows'][] = $row;
-            $i++;
+            $output['data'][] = $aRow;
         }
         unset($listaCompras);
         return new JsonResponse($output);
