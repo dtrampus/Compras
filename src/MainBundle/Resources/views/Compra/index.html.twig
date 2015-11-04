@@ -24,7 +24,7 @@
                         <div class="jarviswidget-editbox">
                             <!-- This area used as dropdown edit box -->
                         </div>
-                        <div class="widget-body no-padding">
+                        <div class="widget-body no-padding" >
                             <div class="widget-body-toolbar">
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
@@ -64,16 +64,16 @@
                                     <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
                                         <a class="btn btn-primary" id="editar">Editar</a>
                                     </div>
-                                    <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
+                                    {#<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
                                         <a class="btn btn-primary" id="cancelar">Cancelar</a>
                                     </div>            
                                     <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
                                         <a class="btn btn-primary" id="guardar">Guardar</a>
-                                    </div>
+                                    </div>#}
                                 </div>
                             </div>
 
-                            <div id="example6"></div>
+                            <div id="handsOnTable"></div>
                         </div>
                     </div>
                 </div>
@@ -95,61 +95,38 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#cmbProveedor, #cmbRubro').select2();
-
+            $("#handsOnTable").width('100%');
             var
-                    container6 = document.getElementById('example6'),
-                    hot6;
-
-            hot6 = new Handsontable(container6, {
-                data: [
-                    model({id: 1, name: 'Ted Right', address: ''})
-                ],
-                dataSchema: model,
-                colHeaders: ['Cantidad', 'Insumo', 'Rubro', 'Precio unitario', 'Precio total'],
+                    container = document.getElementById('handsOnTable'),
+                    hot,
+                    data = [{id: 1, Cantidad: 'Ted Right', Insumo: '22', Rubro: '22', unitario: '22', total: '22'},
+                    {id: 2, Cantidad: 'Ted Right', Insumo: '22', Rubro: '22', unitario: '22', total: '22'},
+                    {id: 3, Cantidad: 'Ted Right', Insumo: '22', Rubro: '22', unitario: '22', total: '22'},
+                    {id: 4, Cantidad: 'Ted Right', Insumo: '22', Rubro: '22', unitario: '22', total: '22'}];
+                    
+            hot = new Handsontable(container, {
+                data: [],
+                colHeaders: ['Cantidad', 'Insumo', 'Rubro', 'Precio Unitario', 'Precio Total'],
+                stretchH: 'all',
                 columns: [
-                    {data: property('Cantidad')},
-                    {data: property('Insumo')},
-                    {data: property('Rubro')},
-                    {data: property('Precio unitario')},
-                    {data: property('Precio total')}
+                    {data: 'Cantidad'},
+                    {data: 'Insumo'},
+                    {data: 'Rubro'},
+                    {data: 'unitario'},
+                    {data: 'total'}
                 ],
-                minSpareRows: 1
+                afterGetCellMeta: function (e, row, col, cellProperties) {
+                    console.log(hot.getDataAtCell(row, col)); 
+               }
             });
+            
+           hot.loadData(data);
+           console.log(hot.afterGetCellMeta);
+           
+           
 
-            function model(opts) {
-                var
-                        _pub = {},
-                        _priv = {
-                            "id": undefined,
-                            "name": undefined,
-                            "address": undefined
-                        };
+           
 
-                for (var i in opts) {
-                    if (opts.hasOwnProperty(i)) {
-                        _priv[i] = opts[i];
-                    }
-                }
-
-                _pub.attr = function (attr, val) {
-                    if (typeof val === 'undefined') {
-                        window.console && console.log("\t\tGET the", attr, "value of", _pub);
-                        return _priv[attr];
-                    }
-                    window.console && console.log("SET the", attr, "value of", _pub);
-                    _priv[attr] = val;
-
-                    return _pub;
-                };
-
-                return _pub;
-            }
-
-            function property(attr) {
-                return function (row, value) {
-                    return row.attr(attr, value);
-                }
-            }
         });
     </script>
 {% endblock %}
