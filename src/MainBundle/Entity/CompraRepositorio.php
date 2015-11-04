@@ -10,7 +10,7 @@ class CompraRepositorio{
     
     public function listarMercaderia($fecha,$rubroId,$proveedorId){
         $query = "
-            SELECT cd.id, cd.cantidad, CONCAT(m.codigo,' - ',m.descripcion,' - ',s.nombre) AS insumo, r.descripcion AS rubro, cd.importe/IFNULL(cd.cantidad,0) AS precio_unitario, cd.importe AS total
+            SELECT cd.cantidad, CONCAT(m.codigo,' - ',m.descripcion,' - ',s.nombre) AS insumo, r.descripcion AS rubro, cd.importe/IFNULL(cd.cantidad,0) AS precio_unitario, cd.importe AS total
             FROM db_principal.blmercaderia m
                 INNER JOIN db_principal.sis_unidad_medida s 
                     ON m.sis_unidad_medida_id = s.id
