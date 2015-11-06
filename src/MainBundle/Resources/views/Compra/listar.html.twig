@@ -1,36 +1,135 @@
-{% extends '::base.html.twig' %}
+{% extends "base.html.twig" %}
 
-{% block body -%}
-    <h1>Sucursal</h1>
+{% block content %}
+    <div class="row">
+        <!-- col -->
+        <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+            <h1 class="page-title txt-color-blueDark"><i class="fa fa-shopping-cart"></i> Gestión de Compras <span>>
+                    Ver Compras </span></h1>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- widget grid -->
+    <section id="widget-grid" class="">
+        <!-- row -->
+        <div class="row">
+            <!-- NEW WIDGET START -->
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="jarviswidget jarviswidget-color-white" id="wid-id-0" data-widget-editbutton="false">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-shopping-cart"></i> </span>
+                        <h2> Compras </h2>
+                    </header>
+                    <div>
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding" >
+                            
+                            <table id="tablaCompras" class="table table-striped table-bordered table-hover" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th data-class="expand">Fecha</th>
+                                        <th data-hide="phone">Proveedor</th>
+                                        <th data-hide="phone">Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for compra in compras %}
+                                        <tr>
+                                            <td>{{ compra.fecha }}</td>
+                                            <td>{{ compra.nombre }}</td>
+                                            <td>{{ compra.total }}</td>
+                                            <td>
+                                                <a class="btn btn-primary btn-sm margin-right-5" href="{{ path('editar_compra', { 'id': compra.id }) }}"><i class="fa fa-pencil-square-o "></i></a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <!-- WIDGET END -->
+        </div>
+        <!-- end row -->
+    </section>
+    <!-- end widget grid -->
+{% endblock %}
 
-    <table class="record_properties">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-            <tr>
-                <th>Nombre</th>
-                <td>{{ entity.nombre }}</td>
-            </tr>
-            <tr>
-                <th>Nombrebd</th>
-                <td>{{ entity.nombreBd }}</td>
-            </tr>
-        </tbody>
-    </table>
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts 'SmartAdmin/js/plugin/datatables/jquery.dataTables.min.js'
+                   'SmartAdmin/js/plugin/datatables/dataTables.colVis.min.js'
+                   'SmartAdmin/js/plugin/datatables/dataTables.tableTools.min.js'
+                   'SmartAdmin/js/plugin/datatables/dataTables.bootstrap.min.js'
+                   'SmartAdmin/js/plugin/datatable-responsive/datatables.responsive.min.js' %}
+    <script src="{{ asset_url }}" type="text/javascript"></script>
+    {% endjavascripts %}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('sucursal') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('sucursal_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+            var responsiveHelper_dt_basic = undefined;
+
+            var breakpointDefinition = {
+                tablet: 1024,
+                phone: 480
+            };
+
+            $('#tablaCompras').DataTable({
+                "sDom": "<'dt-toolbar'<'col-xs-3 col-sm-6'><'col-sm-6 col-xs-9'f>r>" +
+                        "t" +
+                        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+                "columnDefs": [
+                    {
+                        "targets": -1,
+                        "orderable": false,
+                        "searchable": false,
+                        "className": "text-center"
+                    }
+                ],
+                "preDrawCallback": function () {
+                    // Initialize the responsive datatables helper once.
+                    if (!responsiveHelper_dt_basic) {
+                        responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('#tablaCompras'), breakpointDefinition);
+                    }
+                },
+                "rowCallback": function (nRow) {
+                    responsiveHelper_dt_basic.createExpandIcon(nRow);
+                },
+                "drawCallback": function (oSettings) {
+                    responsiveHelper_dt_basic.respond();
+                },
+                "language": {
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    }
+                }
+            });
+            
+        });
+    </script>
 {% endblock %}

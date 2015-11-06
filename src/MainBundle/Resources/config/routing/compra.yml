@@ -1,9 +1,23 @@
 compra:
     path:     /
-    defaults: { _controller: "MainBundle:Compra:index" }
+    defaults: { _controller: "MainBundle:Compra:listarCompras" }
+    
+nueva_compra:
+    path:     /nueva
+    defaults: { _controller: "MainBundle:Compra:nuevaCompra" }
+    
+editar_compra:
+    path:     /{id}/editar
+    defaults: { _controller: "MainBundle:Compra:editar" }
     
 compra_lista:
     path:     /lista
     defaults: { _controller: "MainBundle:Compra:listar" }
+    options:
+        expose: true
+        
+compra_lista_editar:
+    path:     /listaeditar
+    defaults: { _controller: "MainBundle:Compra:listarEditar" }
     options:
         expose: true

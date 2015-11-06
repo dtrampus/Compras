@@ -1,4 +1,13 @@
 {% extends "base.html.twig" %}
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets  'SmartAdmin/jquery-handsontable/handsontable.full.css'
+                                'SmartAdmin/jquery-handsontable/handsontable.bootstrap.css'
+                                 filter='cssrewrite' %}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"  />
+    {% endstylesheets %}
+{% endblock %}
+
 
 {% block content %}
     <div class="row">
@@ -115,7 +124,7 @@
                         var row, col, r_len, c_len;
                         for (row = 0, r_len = myData.length; row < r_len; row++) {
                             for (col = 0, c_len = myData[row].length; col < c_len; col++) {
-                                if(row == change[0][0] && col == change[0][1]){
+                                if (row == change[0][0] && col == change[0][1]) {
                                     myData[row][col] = change[0][3];
                                 }
                             }
@@ -123,11 +132,8 @@
                     }
                 }
             });
-            
-           hot.loadData(data);
-           console.log(hot.afterGetCellMeta);
-           
-           
+
+
 
             function actualizarGrilla() {
                 $.ajax({
@@ -151,8 +157,9 @@
                         $console.text('Mercadería Cargada.');
                     }
                 });
-            };
-            
+            }
+            ;
+
             $('#cmbRubro').on('change', function (event) {
                 var value = ('' + this.value).toLowerCase(), row, col, r_len, c_len;
                 var data = myData;
@@ -172,12 +179,12 @@
                     $container.handsontable('loadData', searcharray);
                 }
             });
-    
+
             actualizarGrilla();
 
-{#            $('.filters').change(function () {
-                actualizarGrilla();
-            });#}
+        {#            $('.filters').change(function () {
+                        actualizarGrilla();
+                    });#}
 
         });
     </script>

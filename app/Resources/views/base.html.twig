@@ -14,8 +14,6 @@
                                 'SmartAdmin/css/smartadmin-production.min.css'
                                 'SmartAdmin/css/smartadmin-skins.min.css'
                                 'SmartAdmin/css/custom.css'
-                                'SmartAdmin/jquery-handsontable/handsontable.full.css'
-                                'SmartAdmin/jquery-handsontable/handsontable.bootstrap.css'
                                  filter='cssrewrite' %}
                 <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"  />
                 {% endstylesheets %}
@@ -381,7 +379,10 @@
                             <a href="#"><i class="fa fa-shopping-cart"></i> <span class="menu-item-parent">Gestión de Compras</span></a>
                             <ul>
                                 <li>
-                                    <a href="{{ path ('compra') }}">Nueva Compra</a>
+                                    <a href="{{ path ('compra') }}">Listado de Compras</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path ('nueva_compra') }}">Crear Compra</a>
                                 </li>
                             </ul>
                         </li>

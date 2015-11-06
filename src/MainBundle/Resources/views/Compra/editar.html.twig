@@ -1,11 +1,20 @@
 {% extends "base.html.twig" %}
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets  'SmartAdmin/jquery-handsontable/handsontable.full.css'
+                                'SmartAdmin/jquery-handsontable/handsontable.bootstrap.css'
+                                 filter='cssrewrite' %}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"  />
+    {% endstylesheets %}
+{% endblock %}
+
 
 {% block content %}
     <div class="row">
         <!-- col -->
         <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
             <h1 class="page-title txt-color-blueDark"><i class="fa fa-shopping-cart"></i> Gestión de Compras <span>>
-                    Nueva Compra </span></h1>
+                    Editar Compra </span></h1>
         </div>
         <!-- end col -->
     </div>
@@ -18,7 +27,7 @@
                 <div class="jarviswidget jarviswidget-color-white" id="wid-id-0" data-widget-editbutton="false">
                     <header>
                         <span class="widget-icon"> <i class="fa fa-shopping-cart"></i> </span>
-                        <h2> Compra </h2>
+                        <h2> Editar Compra </h2>
                     </header>
                     <div>
                         <div class="jarviswidget-editbox">
@@ -60,7 +69,8 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>      
+                                    </div>
+                                    <input type="hidden" name="compraId" id="compraId" value="{{ id }}" />
                                     <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
                                         <a class="btn btn-primary" id="save">Guardar</a>
                                     </div>
@@ -115,7 +125,7 @@
                         var row, col, r_len, c_len;
                         for (row = 0, r_len = myData.length; row < r_len; row++) {
                             for (col = 0, c_len = myData[row].length; col < c_len; col++) {
-                                if(row == change[0][0] && col == change[0][1]){
+                                if (row == change[0][0] && col == change[0][1]) {
                                     myData[row][col] = change[0][3];
                                 }
                             }
@@ -123,24 +133,15 @@
                     }
                 }
             });
-            
-           hot.loadData(data);
-           console.log(hot.afterGetCellMeta);
-           
-           
+
+
 
             function actualizarGrilla() {
                 $.ajax({
-                    url: Routing.generate('compra_lista'),
+                    url: Routing.generate('compra_lista_editar'),
                     data: {
-                        fecha: function () {
-                            return $("#txtFecha").val();
-                        },
-                        rubroId: function () {
-                            return "";
-                        },
-                        proveedorId: function () {
-                            return "";
+                        compraId: function(){
+                            return $("#compraId").val();
                         }
                     },
                     dataType: 'json',
@@ -151,8 +152,9 @@
                         $console.text('Mercadería Cargada.');
                     }
                 });
-            };
-            
+            }
+            ;
+
             $('#cmbRubro').on('change', function (event) {
                 var value = ('' + this.value).toLowerCase(), row, col, r_len, c_len;
                 var data = myData;
@@ -172,12 +174,12 @@
                     $container.handsontable('loadData', searcharray);
                 }
             });
-    
+
             actualizarGrilla();
 
-{#            $('.filters').change(function () {
-                actualizarGrilla();
-            });#}
+        {#            $('.filters').change(function () {
+                        actualizarGrilla();
+                    });#}
 
         });
     </script>
