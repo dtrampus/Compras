@@ -1,5 +1,5 @@
 <?php
-namespace MainBundle\Entity;
+namespace MainBundle\Repository;
 
 class CompraRepositorio{
     

@@ -1,4 +1,16 @@
 services:
     main_compra_repositorio:
-        class: MainBundle\Entity\CompraRepositorio
+        class: MainBundle\Repository\CompraRepositorio
+        arguments: [@doctrine]
+
+    main_mercaderia_repositorio:
+        class: MainBundle\Repository\MercaderiaRepositorio
+        arguments: [@doctrine]
+
+    main_rubro_repositorio:
+        class: MainBundle\Repository\RubroRepositorio
+        arguments: [@doctrine]
+        
+    main_proveedor_repositorio:
+        class: MainBundle\Repository\ProveedorRepositorio
         arguments: [@doctrine]

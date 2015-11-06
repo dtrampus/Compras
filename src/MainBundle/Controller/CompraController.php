@@ -10,36 +10,28 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  * Sucursal controller.
  *
  */
-class CompraController extends Controller
-{
-    
+class CompraController extends Controller {
+
     /**
-     * Lists all Sucursal entities.
+     * Lists all entities.
      *
      */
-    public function indexAction()
-    {
-        $proveedores = $this->getDoctrine()->getManager("dinamica")->getConnection()->prepare("select id, nombre from db_principal.blproveedores p");
-        $proveedores->execute();
-        $filasProveedores = $proveedores->fetchAll();
-        
-        $rubros = $this->getDoctrine()->getManager("dinamica")->getConnection()->prepare("select id, descripcion from db_principal.blrubros r");
-        $rubros->execute();
-        $filasRubros = $rubros->fetchAll();
-        
-        return $this->render('MainBundle:Compra:index.html.twig',array(
-            "proveedores" => $filasProveedores,
-            "rubros" => $filasRubros
+    public function nuevaCompraAction() {
+        $proveedores = $this->get('main_proveedor_repositorio')->listar();
+
+        $rubros = $this->get('main_rubro_repositorio')->listar();
+
+        return $this->render('MainBundle:Compra:nueva.html.twig', array(
+                    "proveedores" => $filasProveedores,
+                    "rubros" => $filasRubros
         ));
     }
     
-    public function listarAction(Request $request){
-        $fecha = $request->request->get("fecha");
-        $proveedorId = ($request->request->get("proveedorId") == "" ? 0:$request->request->get("proveedorId"));
-        $rubroId = ($request->request->get("rubroId") == "" ? "NULL":$request->request->get("rubroId"));
-        
-        $listaCompras = $this->get('main_compra_repositorio')->listarMercaderia($fecha,$rubroId,$proveedorId);
-        
+    public function listarAction(Request $request) {
+        $rubroId = ($request->request->get("rubroId") == "" ? "NULL" : $request->request->get("rubroId"));
+
+        $listaCompras = $this->get('main_mercaderia_repositorio')->listarMercaderia($rubroId);
+
         $output = array();
         foreach ($listaCompras as $aRow) {
             $fila = array();
@@ -51,4 +43,20 @@ class CompraController extends Controller
         unset($listaCompras);
         return new JsonResponse($output);
     }
+    
+    public function guardarNuevaCompraAction(){
+        
+    }
+    
+    public function listarComprasAction()
+   {
+       $compras = $this->getDoctrine()->getManager("dinamica")->getConnection()->prepare("SELECT c.id, c.fecha, p.nombre, c.total FROM db_sucursal1.blcompras c INNER JOIN db_principal.blproveedores p ON p.id = c.blproveedores_id");
+       $compras->execute();
+       $filasCompras = $compras->fetchAll();
+       
+       return $this->render('MainBundle:Compra:listar.html.twig',array(
+           "compras" => $filasCompras
+       ));
+   }
+
 }

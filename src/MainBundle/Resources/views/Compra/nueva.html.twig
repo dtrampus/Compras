@@ -55,7 +55,7 @@
                                                 <select id="cmbRubro" class="filters" style="width:100%">
                                                     <option value="">Ingrese un rubro...</option>
                                                     {% for rubro in rubros %}
-                                                        <option value="{{ rubro.descripcion }}">{{ rubro.descripcion }}</option>
+                                                        <option value="{{ rubro.id }}">{{ rubro.descripcion }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
@@ -115,7 +115,7 @@
                         var row, col, r_len, c_len;
                         for (row = 0, r_len = myData.length; row < r_len; row++) {
                             for (col = 0, c_len = myData[row].length; col < c_len; col++) {
-                                if(row == change[0][0] && col == change[0][1]){
+                                if (row == change[0][0] && col == change[0][1]) {
                                     myData[row][col] = change[0][3];
                                 }
                             }
@@ -128,13 +128,7 @@
                 $.ajax({
                     url: Routing.generate('compra_lista'),
                     data: {
-                        fecha: function () {
-                            return $("#txtFecha").val();
-                        },
                         rubroId: function () {
-                            return "";
-                        },
-                        proveedorId: function () {
                             return "";
                         }
                     },
@@ -146,8 +140,9 @@
                         $console.text('Mercadería Cargada.');
                     }
                 });
-            };
-            
+            }
+            ;
+
             $('#cmbRubro').on('change', function (event) {
                 var value = ('' + this.value).toLowerCase(), row, col, r_len, c_len;
                 var data = myData;
@@ -167,12 +162,27 @@
                     $container.handsontable('loadData', searcharray);
                 }
             });
-    
+
             actualizarGrilla();
 
-{#            $('.filters').change(function () {
-                actualizarGrilla();
-            });#}
+            $('#save').click(function () {
+                $.ajax({
+                    url: Routing.generate('guardar_nueva_compra'),
+                    dataType: 'json',
+                    type: 'GET',
+                    data: $container.handsontable('getData'),
+                    success: function (res) {
+                        var response = JSON.parse(res.response);
+
+                        if (response.result === 'ok') {
+                            $console.text('Compra guardada.');
+                        }
+                        else {
+                            $console.text('Error!');
+                        }
+                    }
+                });
+            });
 
         });
     </script>
