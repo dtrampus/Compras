@@ -2,8 +2,7 @@
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets  'SmartAdmin/jquery-handsontable/handsontable.full.css'
-                                'SmartAdmin/jquery-handsontable/handsontable.bootstrap.css'
-                                 filter='cssrewrite' %}
+                    'SmartAdmin/jquery-handsontable/handsontable.bootstrap.css' filter='cssrewrite' %}
     <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"  />
     {% endstylesheets %}
 {% endblock %}
@@ -94,8 +93,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts 'SmartAdmin/jquery-handsontable/handsontable.full.js'
-    %}
+    {% javascripts 'SmartAdmin/jquery-handsontable/handsontable.full.js' %}
     <script src="{{ asset_url }}" type="text/javascript"></script>
     {% endjavascripts %}
 
@@ -135,7 +133,7 @@
 
             function actualizarGrilla() {
                 $.ajax({
-                    url: Routing.generate('compra_lista'),
+                    url: Routing.generate('mercaderia_listar_ajax'),
                     data: {
                         rubroId: function () {
                             return "";
@@ -176,7 +174,7 @@
 
             $('#save').click(function () {
                 $.ajax({
-                    url: Routing.generate('guardar_nueva_compra'),
+                    url: Routing.generate('compra_guardar'),
                     dataType: 'json',
                     type: 'GET',
                     data: $container.handsontable('getData'),

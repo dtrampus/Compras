@@ -17,3 +17,7 @@ main_compra:
 main_inventario:
     resource: "@MainBundle/Resources/config/routing/inventario.yml"
     prefix:   /inventario
+    
+main_mercaderia:
+    resource: "@MainBundle/Resources/config/routing/mercaderia.yml"
+    prefix:   /mercaderia

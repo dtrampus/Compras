@@ -1,26 +1,23 @@
-compra:
+compra_listar:
     path:     /
-    defaults: { _controller: "MainBundle:Compra:listarCompras" }
+    defaults: { _controller: "MainBundle:Compra:listar" }
     
-nueva_compra:
+compra_nueva:
     path:     /nueva
-    defaults: { _controller: "MainBundle:Compra:nuevaCompra" }
+    defaults: { _controller: "MainBundle:Compra:nueva" }
     
-editar_compra:
+compra_editar:
     path:     /{id}/editar
     defaults: { _controller: "MainBundle:Compra:editar" }
-    
-compra_lista:
-    path:     /lista
-    defaults: { _controller: "MainBundle:Compra:listar" }
+        
+compra_guardar:
+    path:     /guardar
+    defaults: { _controller: "MainBundle:Compra:guardar" }
     options:
         expose: true
         
-guardar_nueva_compra:
-    path:     /guardar
-    defaults: { _controller: "MainBundle:Compra:guardarNuevaCompra" }
-compra_lista_editar:
-    path:     /listaeditar
-    defaults: { _controller: "MainBundle:Compra:listarEditar" }
+compra_listar_detalle:
+    path:     /listarDetalle
+    defaults: { _controller: "MainBundle:Compra:listarDetalle" }
     options:
         expose: true

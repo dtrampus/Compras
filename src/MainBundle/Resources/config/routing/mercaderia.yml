@@ -1,4 +1,6 @@
-sucursal_seleccion:
-    path:     /seleccion
-    defaults: { _controller: "MainBundle:Sucursal:seleccionar" }
+mercaderia_listar_ajax:
+    path:     /listarAjax
+    defaults: { _controller: "MainBundle:Mercaderia:listarAjax" }
+    options:
+        expose: true
     
