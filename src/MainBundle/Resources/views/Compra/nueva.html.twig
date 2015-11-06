@@ -33,7 +33,7 @@
                         <div class="jarviswidget-editbox">
                             <!-- This area used as dropdown edit box -->
                         </div>
-                        <div class="widget-body no-padding" >
+                        <div class="widget-body no-padding">
                             <div class="widget-body-toolbar">
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
@@ -64,7 +64,7 @@
                                                 <select id="cmbRubro" class="filters" style="width:100%">
                                                     <option value="">Ingrese un rubro...</option>
                                                     {% for rubro in rubros %}
-                                                        <option value="{{ rubro.descripcion }}">{{ rubro.descripcion }}</option>
+                                                        <option value="{{ rubro.id }}">{{ rubro.descripcion }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
@@ -133,19 +133,11 @@
                 }
             });
 
-
-
             function actualizarGrilla() {
                 $.ajax({
                     url: Routing.generate('compra_lista'),
                     data: {
-                        fecha: function () {
-                            return $("#txtFecha").val();
-                        },
                         rubroId: function () {
-                            return "";
-                        },
-                        proveedorId: function () {
                             return "";
                         }
                     },
@@ -182,9 +174,24 @@
 
             actualizarGrilla();
 
-        {#            $('.filters').change(function () {
-                        actualizarGrilla();
-                    });#}
+            $('#save').click(function () {
+                $.ajax({
+                    url: Routing.generate('guardar_nueva_compra'),
+                    dataType: 'json',
+                    type: 'GET',
+                    data: $container.handsontable('getData'),
+                    success: function (res) {
+                        var response = JSON.parse(res.response);
+
+                        if (response.result === 'ok') {
+                            $console.text('Compra guardada.');
+                        }
+                        else {
+                            $console.text('Error!');
+                        }
+                    }
+                });
+            });
 
         });
     </script>

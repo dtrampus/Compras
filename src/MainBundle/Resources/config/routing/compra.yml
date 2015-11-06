@@ -16,6 +16,9 @@ compra_lista:
     options:
         expose: true
         
+guardar_nueva_compra:
+    path:     /guardar
+    defaults: { _controller: "MainBundle:Compra:guardarNuevaCompra" }
 compra_lista_editar:
     path:     /listaeditar
     defaults: { _controller: "MainBundle:Compra:listarEditar" }

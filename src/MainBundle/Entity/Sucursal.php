@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Sucursal
  *
  * @ORM\Table(name="sucursales")
- * @ORM\Entity(repositoryClass="MainBundle\Entity\SucursalRepository")
+ * @ORM\Entity(repositoryClass="MainBundle\Repository\SucursalRepository")
  */
 class Sucursal
 {
