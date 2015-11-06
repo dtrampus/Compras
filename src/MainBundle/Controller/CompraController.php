@@ -22,8 +22,8 @@ class CompraController extends Controller {
         $rubros = $this->get('main_rubro_repositorio')->listar();
 
         return $this->render('MainBundle:Compra:nueva.html.twig', array(
-                    "proveedores" => $filasProveedores,
-                    "rubros" => $filasRubros
+                    "proveedores" => $proveedores,
+                    "rubros" => $rubros
         ));
     }
     

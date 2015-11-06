@@ -109,6 +109,7 @@
                 stretchH: "all",
                 tableClassName: ['table', 'table-hover', 'table-striped'],
                 afterChange: function (change, source) {
+                    //Guarda cambios realizados.
                     if (source === 'edit') {
                         cantidadCambios++;
                         $console.text(cantidadCambios + ' Cambio/s realizados.');
@@ -120,6 +121,12 @@
                                 }
                             }
                         }
+                        //traer valores
+                        var cantidad = $container.handsontable('getDataAtCell', change[0], 0);
+                        var precioUnitario = $container.handsontable('getDataAtCell', change[0], 3);
+                        var precioTotal = $container.handsontable('getDataAtCell', change[0], 4);
+                        //Calcular los totales
+                        {#$container.handsontable('setDataAtCell', change[1], 4, '33');#}
                     }
                 }
             });
