@@ -31,7 +31,7 @@
                                         <div class="form-group">
                                             <label class="col-md-2 control-label" style="padding-top: 7px;">Fecha:</label>
                                             <div class="col-md-10">
-                                                <input class="form-control datepicker filters" id="txtFecha" type="text" data-dateformat="dd/mm/yy" value="{{ "now"|date("d/m/Y")}}">
+                                                <input class="form-control datepicker filters" style="position: relative; z-index: 100000;" id="txtFecha" type="text" data-dateformat="dd/mm/yy" value="{{ "now"|date("d/m/Y")}}">
                                             </div>
                                         </div>
                                     </div>
@@ -55,25 +55,23 @@
                                                 <select id="cmbRubro" class="filters" style="width:100%">
                                                     <option value="">Ingrese un rubro...</option>
                                                     {% for rubro in rubros %}
-                                                        <option value="{{ rubro.id }}">{{ rubro.descripcion }}</option>
+                                                        <option value="{{ rubro.descripcion }}">{{ rubro.descripcion }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>      
                                     <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
-                                        <a class="btn btn-primary" id="editar">Editar</a>
+                                        <a class="btn btn-primary" id="save">Guardar</a>
                                     </div>
-                                    {#<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
-                                        <a class="btn btn-primary" id="cancelar">Cancelar</a>
-                                    </div>            
-                                    <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
-                                        <a class="btn btn-primary" id="guardar">Guardar</a>
-                                    </div>#}
                                 </div>
-                            </div>
-
-                            <div id="handsOnTable"></div>
+                            </div>         
+                            <pre id="info" class="console">Click "Load" to load data from server</pre>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <div id="example6" style="width:100%;"></div>
+                                </div>
+                            </div>   
                         </div>
                     </div>
                 </div>
@@ -95,29 +93,35 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#cmbProveedor, #cmbRubro').select2();
-            $("#handsOnTable").width('100%');
-            var
-                    container = document.getElementById('handsOnTable'),
-                    hot,
-                    data = [{id: 1, Cantidad: 'Ted Right', Insumo: '22', Rubro: '22', unitario: '22', total: '22'},
-                    {id: 2, Cantidad: 'Ted Right', Insumo: '22', Rubro: '22', unitario: '22', total: '22'},
-                    {id: 3, Cantidad: 'Ted Right', Insumo: '22', Rubro: '22', unitario: '22', total: '22'},
-                    {id: 4, Cantidad: 'Ted Right', Insumo: '22', Rubro: '22', unitario: '22', total: '22'}];
-                    
-            hot = new Handsontable(container, {
-                data: [],
-                colHeaders: ['Cantidad', 'Insumo', 'Rubro', 'Precio Unitario', 'Precio Total'],
-                stretchH: 'all',
+            var myData, cantidadCambios = 0;
+            var $container = $("#example6");
+            var $console = $("#info");
+            $container.handsontable({
+                colHeaders: ['Cantidad', 'Insumo', 'Rubro', 'Precio unitario', 'Precio total'],
                 columns: [
-                    {data: 'Cantidad'},
-                    {data: 'Insumo'},
-                    {data: 'Rubro'},
-                    {data: 'unitario'},
-                    {data: 'total'}
+                    {},
+                    {readOnly: true},
+                    {readOnly: true},
+                    {},
+                    {}
                 ],
-                afterGetCellMeta: function (e, row, col, cellProperties) {
-                    console.log(hot.getDataAtCell(row, col)); 
-               }
+                columnSorting: true,
+                stretchH: "all",
+                tableClassName: ['table', 'table-hover', 'table-striped'],
+                afterChange: function (change, source) {
+                    if (source === 'edit') {
+                        cantidadCambios++;
+                        $console.text(cantidadCambios + ' Cambio/s realizados.');
+                        var row, col, r_len, c_len;
+                        for (row = 0, r_len = myData.length; row < r_len; row++) {
+                            for (col = 0, c_len = myData[row].length; col < c_len; col++) {
+                                if(row == change[0][0] && col == change[0][1]){
+                                    myData[row][col] = change[0][3];
+                                }
+                            }
+                        }
+                    }
+                }
             });
             
            hot.loadData(data);
@@ -125,7 +129,55 @@
            
            
 
-           
+            function actualizarGrilla() {
+                $.ajax({
+                    url: Routing.generate('compra_lista'),
+                    data: {
+                        fecha: function () {
+                            return $("#txtFecha").val();
+                        },
+                        rubroId: function () {
+                            return "";
+                        },
+                        proveedorId: function () {
+                            return "";
+                        }
+                    },
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function (res) {
+                        myData = res;
+                        $container.handsontable('loadData', res);
+                        $console.text('Mercadería Cargada.');
+                    }
+                });
+            };
+            
+            $('#cmbRubro').on('change', function (event) {
+                var value = ('' + this.value).toLowerCase(), row, col, r_len, c_len;
+                var data = myData;
+                var searcharray = [];
+                if (typeof value != "undefined") {
+                    for (row = 0, r_len = data.length; row < r_len; row++) {
+                        for (col = 0, c_len = data[row].length; col < c_len; col++) {
+                            if (data[row][2] == null) {
+                                continue;
+                            }
+                            if (('' + data[row][2]).toLowerCase().indexOf(value) > -1) {
+                                searcharray.push(data[row]);
+                                break;
+                            }
+                        }
+                    }
+                    $container.handsontable('loadData', searcharray);
+                }
+            });
+    
+            actualizarGrilla();
+
+{#            $('.filters').change(function () {
+                actualizarGrilla();
+            });#}
 
         });
     </script>
