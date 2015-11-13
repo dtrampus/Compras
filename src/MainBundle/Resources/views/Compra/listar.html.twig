@@ -42,7 +42,7 @@
                                             <td>{{ compra.nombre }}</td>
                                             <td>{{ compra.total }}</td>
                                             <td>
-                                                <a class="btn btn-primary btn-sm margin-right-5" href="{#{{ path('tank_show', { 'id': entity.id }) }}#}"><i class="fa fa-pencil-square-o "></i></a>
+                                                <a class="btn btn-primary btn-sm margin-right-5" href="{{ path('compra_editar', { 'id': compra.id }) }}"><i class="fa fa-pencil-square-o "></i></a>
                                             </td>
                                         </tr>
                                     {% endfor %}
