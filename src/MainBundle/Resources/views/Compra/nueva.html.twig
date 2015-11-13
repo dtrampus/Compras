@@ -63,12 +63,13 @@
                                                 <select id="cmbRubro" class="filters" style="width:100%">
                                                     <option value="">Ingrese un rubro...</option>
                                                     {% for rubro in rubros %}
-                                                        <option value="{{ rubro.id }}">{{ rubro.descripcion }}</option>
+                                                        <option value="{{ rubro.descripcion }}">{{ rubro.descripcion }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>      
+                                    </div>    
+                                    <input type="hidden" name="tipo" id="tipo" value="nueva" />
                                     <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
                                         <a class="btn btn-primary" id="save">Guardar</a>
                                     </div>
@@ -106,11 +107,13 @@
             $container.handsontable({
                 colHeaders: ['Cantidad', 'Insumo', 'Rubro', 'Precio unitario', 'Precio total'],
                 columns: [
-                    {},
-                    {readOnly: true},
-                    {readOnly: true},
-                    {},
-                    {}
+                    {data: 0},
+                    {data: 1,
+                        readOnly: true},
+                    {data: 2,
+                        readOnly: true},
+                    {data: 3},
+                    {data: 4}
                 ],
                 columnSorting: true,
                 stretchH: "all",
@@ -134,11 +137,6 @@
             function actualizarGrilla() {
                 $.ajax({
                     url: Routing.generate('mercaderia_listar_ajax'),
-                    data: {
-                        rubroId: function () {
-                            return "";
-                        }
-                    },
                     dataType: 'json',
                     type: 'POST',
                     success: function (res) {
@@ -157,6 +155,7 @@
                 if (typeof value != "undefined") {
                     for (row = 0, r_len = data.length; row < r_len; row++) {
                         for (col = 0, c_len = data[row].length; col < c_len; col++) {
+                            var dat = data[row];
                             if (data[row][2] == null) {
                                 continue;
                             }
@@ -173,11 +172,30 @@
             actualizarGrilla();
 
             $('#save').click(function () {
+                var tipo = $("#tipo").val();
+                var fecha = $("#txtFecha").val();
+                var proveedor = $("#cmbProveedor").val();
+                var arrayData = [];
+                myData.forEach(function (item) {
+                    var res = [];
+                    if(item[0] != "" && item[3] != "" && item[4] != ""){
+                        res[0] = item[0];
+                        res[1] = item[5];
+                        res[2] = item[3]
+                        res[3] = item[4];
+                        arrayData.push(res);
+                    }
+                });
                 $.ajax({
                     url: Routing.generate('compra_guardar'),
                     dataType: 'json',
-                    type: 'GET',
-                    data: $container.handsontable('getData'),
+                    type: 'POST',
+                    data: {
+                        "tipo": tipo,
+                        "data": arrayData,
+                        "fecha": fecha,
+                        "proveedor": proveedor
+                    },
                     success: function (res) {
                         var response = JSON.parse(res.response);
 

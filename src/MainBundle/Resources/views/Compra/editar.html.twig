@@ -40,7 +40,7 @@
                                         <div class="form-group">
                                             <label class="col-md-2 control-label" style="padding-top: 7px;">Fecha:</label>
                                             <div class="col-md-10">
-                                                <input class="form-control datepicker filters" style="position: relative; z-index: 100000;" id="txtFecha" type="text" data-dateformat="dd/mm/yy" value="{{ "now"|date("d/m/Y")}}">
+                                                <input class="form-control datepicker filters" style="position: relative; z-index: 100000;" id="txtFecha" type="text" data-dateformat="dd/mm/yy" value="{{ datos.fecha|date("d/m/Y")}}">
                                             </div>
                                         </div>
                                     </div>
@@ -51,7 +51,11 @@
                                                 <select id="cmbProveedor" class="filters" style="width:100%">
                                                     <option value="">Ingrese un proveedor...</option>
                                                     {% for proveedor in proveedores %}
-                                                        <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
+                                                        {% if proveedor.id == datos.proveedor %}
+                                                            <option value="{{ proveedor.id }}" selected="selected">{{ proveedor.nombre }}</option>
+                                                        {% else %}
+                                                            <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
+                                                        {% endif %}
                                                     {% endfor %}
                                                 </select>
                                             </div>
@@ -71,6 +75,7 @@
                                         </div>
                                     </div>
                                     <input type="hidden" name="compraId" id="compraId" value="{{ id }}" />
+                                    <input type="hidden" name="tipo" id="tipo" value="editar" />
                                     <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
                                         <a class="btn btn-primary" id="save">Guardar</a>
                                     </div>
@@ -109,11 +114,13 @@
             $container.handsontable({
                 colHeaders: ['Cantidad', 'Insumo', 'Rubro', 'Precio unitario', 'Precio total'],
                 columns: [
-                    {},
-                    {readOnly: true},
-                    {readOnly: true},
-                    {},
-                    {}
+                    {data: 0},
+                    {data: 1,
+                        readOnly: true},
+                    {data: 2,
+                        readOnly: true},
+                    {data: 3},
+                    {data: 4}
                 ],
                 columnSorting: true,
                 stretchH: "all",
@@ -137,10 +144,11 @@
 
 
             function actualizarGrilla() {
+
                 $.ajax({
                     url: Routing.generate('compra_listar_detalle'),
                     data: {
-                        compraId: function(){
+                        compraId: function () {
                             return $("#compraId").val();
                         }
                     },
@@ -177,10 +185,51 @@
 
             actualizarGrilla();
 
+            $('#save').click(function () {
+                var idCompra = $("#compraId").val();
+                var fecha = $("#txtFecha").val();
+                var proveedor = $("#cmbProveedor").val();
+                var tipo = $("#tipo").val();
+                var arrayData = [];
+                myData.forEach(function (item) {
+                    var res = [];
+                    if (item[0] != null && item[3] != null && item[4] != null) {
+                        if (item[0] != "" && item[3] != "" && item[4] != "") {
+                            res[0] = item[0];
+                            res[1] = item[5];
+                            res[2] = item[3]
+                            res[3] = item[4];
+                            arrayData.push(res);
+                        }
+                    }
+                });
+                $.ajax({
+                    url: Routing.generate('compra_guardar'),
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {
+                        "tipo": tipo,
+                        "data": arrayData,
+                        "idCompra": idCompra,
+                        "fecha": fecha,
+                        "proveedor": proveedor
+                    },
+                    success: function (res) {
+                        var response = JSON.parse(res.response);
+
+                        if (response.result === 'ok') {
+                            $console.text('Compra guardada.');
+                        }
+                        else {
+                            $console.text('Error!');
+                        }
+                    }
+                });
+            });
         {#            $('.filters').change(function () {
                         actualizarGrilla();
                     });#}
 
-        });
+                        });
     </script>
 {% endblock %}
