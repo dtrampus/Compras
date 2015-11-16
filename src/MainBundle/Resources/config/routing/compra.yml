@@ -1,6 +1,8 @@
 compra_listar:
     path:     /
     defaults: { _controller: "MainBundle:Compra:listar" }
+    options:
+        expose: true
     
 compra_nueva:
     path:     /nueva
@@ -19,5 +21,11 @@ compra_guardar:
 compra_listar_detalle:
     path:     /listarDetalle
     defaults: { _controller: "MainBundle:Compra:listarDetalle" }
+    options:
+        expose: true
+        
+eliminar_compra:
+    path:     /{id}/eliminar
+    defaults: { _controller: "MainBundle:Compra:eliminar" }
     options:
         expose: true

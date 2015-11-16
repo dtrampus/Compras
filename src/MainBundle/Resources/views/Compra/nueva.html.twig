@@ -186,11 +186,13 @@
                 myData.forEach(function (item) {
                     var res = [];
                     if(item[0] != "" && item[3] != "" && item[4] != ""){
-                        res[0] = item[0];
-                        res[1] = item[5];
-                        res[2] = item[3]
-                        res[3] = item[4];
-                        arrayData.push(res);
+                        if (item[0] != "0" && item[3] != "0" && item[4] != "0") {
+                            res[0] = item[0];
+                            res[1] = item[5];
+                            res[2] = item[3]
+                            res[3] = item[4];
+                            arrayData.push(res);
+                        }
                     }
                 });
                 $.ajax({
@@ -203,14 +205,9 @@
                         "fecha": fecha,
                         "proveedor": proveedor
                     },
-                    success: function (res) {
-                        var response = JSON.parse(res.response);
-
-                        if (response.result === 'ok') {
-                            $console.text('Compra guardada.');
-                        }
-                        else {
-                            $console.text('Error!');
+                    success: function (result) {
+                        if(result === "no_errors"){
+                            window.location.href = "{{ path('compra_listar') }}";
                         }
                     }
                 });

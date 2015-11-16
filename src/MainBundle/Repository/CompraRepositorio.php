@@ -47,8 +47,8 @@ class CompraRepositorio {
 		ifnull(detalle.cantidad, '') AS `0`,
 		CONCAT(m.codigo, ' - ', m.descripcion, ' - ', s.nombre) AS `1`, 
 		r.descripcion AS `2`, 
-		ifnull(ROUND(detalle.importe/IFNULL(detalle.cantidad,0),2), '') AS `3`, 
-		ifnull(detalle.importe, '') AS `4`,
+		ifnull(detalle.importe, '') AS `3`, 
+		ifnull(ROUND(detalle.importe*IFNULL(detalle.cantidad,0),2), '') AS `4`,
 		m.id AS `5`
             FROM db_principal.blmercaderia  m
             INNER JOIN db_principal.sis_unidad_medida s 
@@ -58,7 +58,7 @@ class CompraRepositorio {
             LEFT JOIN 
             (
                 SELECT cd.blmercaderia_id blmercaderia_id, SUM(cantidad) cantidad, cd.importe importe
-                FROM db_sucursal1.blcompras_detalle cd
+                FROM blcompras_detalle cd
                     LEFT JOIN db_sucursal1.blcompras c
                             ON cd.blcompras_id = c.id
                             where cd.blcompras_id = c.id and c.id = $compraId
@@ -149,6 +149,27 @@ class CompraRepositorio {
                 $consulta = $conn->prepare($query3);
                 $consulta->execute();
             }
+            $conn->commit();
+        } catch (Exception $e) {
+            $conn->rollback();
+            throw $e;
+        }
+    }
+    
+    public function eliminar($id) {
+        $conn = $this->doctrine->getEntityManager("dinamica")->getConnection();
+        $conn->beginTransaction();
+        try {
+            $query = "
+                DELETE c,cd FROM db_sucursal1.blcompras c
+                JOIN db_sucursal1.blcompras_detalle cd
+                WHERE c.id = $id
+                AND cd.blcompras_id = $id
+                ";
+
+                $consulta = $conn->prepare($query);
+                $consulta->execute();
+
             $conn->commit();
         } catch (Exception $e) {
             $conn->rollback();

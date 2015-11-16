@@ -4,6 +4,7 @@ namespace MainBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
@@ -58,12 +59,13 @@ class CompraController extends Controller {
 
         if ($tipo == "nueva") {
             $this->get('main_compra_repositorio')->nuevo($data, $fecha, $proveedor, $idUsuario);
+            $this->get('session')->getFlashBag()->add('success', 'La compra se ha cargado correctamente!');
         } else {
             $this->get('main_compra_repositorio')->editar($data, $fecha, $proveedor, $idCompra);
+            $this->get('session')->getFlashBag()->add('success', 'La compra se ha editado correctamente!');
         }
         
-
-        return $this->redirect($this->generateUrl('compra_listar'));
+        return new JsonResponse("no_errors");
     }
 
     public function listarDetalleAction(Request $request) {
@@ -81,6 +83,14 @@ class CompraController extends Controller {
         }
         unset($detalles);
         return new JsonResponse($output);
+    }
+    
+    public function eliminarAction($id) {
+        
+        $this->get('main_compra_repositorio')->eliminar($id);  
+        $this->get('session')->getFlashBag()->add('success', 'La compra se ha eliminado correctamente!');
+        
+        return new JsonResponse("no_errors");
     }
 
 }
