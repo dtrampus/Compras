@@ -129,10 +129,11 @@
                     if (source === 'edit') {
                         cantidadCambios++;
                         $console.text(cantidadCambios + ' Cambio/s realizados.');
+                        var datarow = $container.handsontable('getDataAtRow', change[0][0]);
                         var row, col, r_len, c_len;
                         for (row = 0, r_len = myData.length; row < r_len; row++) {
                             for (col = 0, c_len = myData[row].length; col < c_len; col++) {
-                                if (row == change[0][0] && col == change[0][1]) {
+                                if (myData[row][col] == datarow[5]) {
                                     myData[row][col] = change[0][3];
                                 }
                             }
@@ -184,7 +185,6 @@
             });
 
             actualizarGrilla();
-            var idc = "1";
 
             $('#save').click(function () {
                 var idCompra = $("#compraId").val();
