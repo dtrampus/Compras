@@ -14,3 +14,7 @@ services:
     main_proveedor_repositorio:
         class: MainBundle\Repository\ProveedorRepositorio
         arguments: [@doctrine]
+        
+    main_inventario_repositorio:
+        class: MainBundle\Repository\InventarioRepositorio
+        arguments: [@doctrine]
