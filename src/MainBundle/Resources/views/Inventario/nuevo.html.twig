@@ -1,10 +1,193 @@
 {% extends "base.html.twig" %}
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets  'SmartAdmin/jquery-handsontable/handsontable.full.css'
+                    'SmartAdmin/jquery-handsontable/handsontable.bootstrap.css' filter='cssrewrite' %}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"  />
+    {% endstylesheets %}
+{% endblock %}
+
 
 {% block content %}
+    <div class="row">
+        <!-- col -->
+        <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+            <h1 class="page-title txt-color-blueDark"><i class="fa fa-shopping-cart"></i> Gestión de Inventario <span>>
+                    Crear Inventario </span></h1>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- widget grid -->
     <section id="widget-grid" class="">
         <!-- row -->
         <div class="row">
-
+            <!-- NEW WIDGET START -->
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="jarviswidget jarviswidget-color-white" id="wid-id-0" data-widget-editbutton="false">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-file-text-o"></i> </span>
+                        <h2> Inventario </h2>
+                    </header>
+                    <div>
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+                        </div>
+                        <div class="widget-body no-padding">
+                            <div class="widget-body-toolbar">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" style="padding-top: 7px;">Fecha:</label>
+                                            <div class="col-md-10">
+                                                <input class="form-control datepicker filters" style="position: relative; z-index: 100000;" id="txtFecha" type="text" data-dateformat="dd/mm/yy" value="{{ "now"|date("d/m/Y")}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label" style="padding-top: 7px;">Rubro:</label>
+                                            <div class="col-md-9">
+                                                <select id="cmbRubro" class="filters" style="width:100%">
+                                                    <option value="">Ingrese un rubro...</option>
+                                                    {% for rubro in rubros %}
+                                                        <option value="{{ rubro.descripcion }}">{{ rubro.descripcion }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>      
+                                    <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
+                                        <a class="btn btn-primary" id="save">Guardar</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="tipo" id="tipo" value="nueva">
+                            <pre id="info" class="console">Click "Load" to load data from server</pre>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <div id="tabla-inventario" style="width:100%;"></div>
+                                </div>
+                            </div>   
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <!-- WIDGET END -->
         </div>
+        <!-- end row -->
     </section>
+    <!-- end widget grid -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts 'SmartAdmin/jquery-handsontable/handsontable.full.js' %}
+    <script src="{{ asset_url }}" type="text/javascript"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(' #cmbRubro').select2();
+            var myData, cantidadCambios = 0;
+            var $container = $("#tabla-inventario");
+            var $console = $("#info");
+            $container.handsontable({
+                colHeaders: ['Conteo', 'Insumo', 'Rubro'],
+                columns: [
+                    {type: 'numeric', format: '0,0.000', allowInvalid: false},
+                    {readOnly: true},
+                    {readOnly: true}
+                ],
+                columnSorting: true,
+                stretchH: "all",
+                tableClassName: ['table', 'table-hover', 'table-striped'],
+                afterChange: function (change, source) {
+                    //Guarda cambios realizados.
+                    if (source === 'edit') {
+                        cantidadCambios++;
+                        $console.text(cantidadCambios + ' Cambio/s realizados.');
+                        var datarow = $container.handsontable('getDataAtRow', change[0][0]);
+                        var row, col, r_len, c_len;
+                        for (row = 0, r_len = myData.length; row < r_len; row++) {
+                            for (col = 0, c_len = myData[row].length; col < c_len; col++) {
+                                if (myData[row][col] == datarow[5]) {
+                                    myData[row][col] = change[0][3];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            function actualizarGrilla() {
+                $.ajax({
+                    url: Routing.generate('mercaderia_listar_ajax'),
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function (res) {
+                        myData = res;
+                        $container.handsontable('loadData', res);
+                        $console.text('Mercadería Cargada.');
+                    }
+                });
+            }
+            ;
+            
+            $('#cmbRubro').on('change', function (event) {
+                var value = ('' + this.value).toLowerCase(), row, col, r_len, c_len;
+                var data = myData;
+                var searcharray = [];
+                if (typeof value != "undefined") {
+                    for (row = 0, r_len = data.length; row < r_len; row++) {
+                        for (col = 0, c_len = data[row].length; col < c_len; col++) {
+                            if (data[row][2] == null) {
+                                continue;
+                            }
+                            if (('' + data[row][2]).toLowerCase().indexOf(value) > -1) {
+                                searcharray.push(data[row]);
+                                break;
+                            }
+                        }
+                    }
+                    $container.handsontable('loadData', searcharray);
+                }
+            });
+
+            actualizarGrilla();
+
+            $('#save').click(function () {
+                var tipo = $("#tipo").val();
+                var fecha = $("#txtFecha").val();
+                var arrayData = [];
+                myData.forEach(function (item) {
+                    var res = [];
+                    if(item[0] != ""){
+                        res[0] = item[0];
+                        res[1] = item[5];
+                        arrayData.push(res);
+                    }
+                });
+                $.ajax({
+                    url: Routing.generate('inventario_guardar'),
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {
+                        "tipo": tipo,
+                        "data": arrayData,
+                        "fecha": fecha
+                    },
+                    success: function (res) {
+                        if (res === "no_errors") {
+                            $('#save').prop('disabled', true);
+                            window.location.href = "http://localhost:8000{{ path('inventario_listar') }}";
+                        }
+                        else {
+                            $console.text('Error!');
+                        }
+                    }
+                });
+            });
+
+        });
+    </script>
 {% endblock %}

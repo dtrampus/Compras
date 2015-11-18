@@ -1,3 +1,29 @@
-inventario:
+inventario_listar:
     path:     /
-    defaults: { _controller: "MainBundle:Inventario:index" }
+    defaults: { _controller: "MainBundle:Inventario:listar" }
+
+inventario_nuevo:
+    path:     /nuevo
+    defaults: { _controller: "MainBundle:Inventario:nuevo" }
+    
+inventario_guardar:
+    path:     /guardar
+    defaults: { _controller: "MainBundle:Inventario:guardar" }
+    options:
+        expose: true
+        
+inventario_editar:
+    path:     /{id}/editar
+    defaults: { _controller: "MainBundle:Inventario:editar" }
+    
+inventario_listar_detalle:
+    path: /listarDetalle
+    defaults: { _controller: "MainBundle:Inventario:listarDetalle" }
+    options:
+        expose: true
+        
+inventario_eliminar:
+    path:     /{id}/eliminar
+    defaults: { _controller: "MainBundle:Inventario:eliminar" }
+    options:
+        expose: true

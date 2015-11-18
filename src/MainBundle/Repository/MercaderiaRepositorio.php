@@ -10,7 +10,7 @@ class MercaderiaRepositorio{
     
     public function listar(){
         $query = "
-            SELECT '' ,CONCAT(m.codigo,' - ',m.descripcion,' - ',s.nombre) AS insumo, r.descripcion AS rubro, '', ''
+            SELECT '' AS `0`,CONCAT(m.codigo,' - ',m.descripcion,' - ',s.nombre) AS `1`, r.descripcion AS `2`, '' AS `3`, '' AS `4`, m.id AS `5`
             FROM db_principal.blmercaderia m
                 INNER JOIN db_principal.sis_unidad_medida s 
                     ON m.sis_unidad_medida_id = s.id

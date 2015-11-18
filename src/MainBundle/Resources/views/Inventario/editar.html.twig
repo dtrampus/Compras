@@ -2,8 +2,7 @@
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets  'SmartAdmin/jquery-handsontable/handsontable.full.css'
-                                'SmartAdmin/jquery-handsontable/handsontable.bootstrap.css'
-                                 filter='cssrewrite' %}
+                    'SmartAdmin/jquery-handsontable/handsontable.bootstrap.css' filter='cssrewrite' %}
     <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"  />
     {% endstylesheets %}
 {% endblock %}
@@ -13,8 +12,8 @@
     <div class="row">
         <!-- col -->
         <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-            <h1 class="page-title txt-color-blueDark"><i class="fa fa-shopping-cart"></i> Gestión de Compras <span>>
-                    Editar Compra </span></h1>
+            <h1 class="page-title txt-color-blueDark"><i class="fa fa-shopping-cart"></i> Gestión de Inventario <span>>
+                    Crear Inventario </span></h1>
         </div>
         <!-- end col -->
     </div>
@@ -26,34 +25,21 @@
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="jarviswidget jarviswidget-color-white" id="wid-id-0" data-widget-editbutton="false">
                     <header>
-                        <span class="widget-icon"> <i class="fa fa-shopping-cart"></i> </span>
-                        <h2> Editar Compra </h2>
+                        <span class="widget-icon"> <i class="fa fa-file-text-o"></i> </span>
+                        <h2> Inventario </h2>
                     </header>
                     <div>
                         <div class="jarviswidget-editbox">
                             <!-- This area used as dropdown edit box -->
                         </div>
-                        <div class="widget-body no-padding" >
+                        <div class="widget-body no-padding">
                             <div class="widget-body-toolbar">
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
                                         <div class="form-group">
                                             <label class="col-md-2 control-label" style="padding-top: 7px;">Fecha:</label>
                                             <div class="col-md-10">
-                                                <input class="form-control datepicker filters" style="position: relative; z-index: 100000;" id="txtFecha" type="text" data-dateformat="dd/mm/yy" value="{{ "now"|date("d/m/Y")}}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                        <div class="form-group">
-                                            <label class="col-md-3 control-label" style="padding-top: 7px;">Proveedor:</label>
-                                            <div class="col-md-9">
-                                                <select id="cmbProveedor" class="filters" style="width:100%">
-                                                    <option value="">Ingrese un proveedor...</option>
-                                                    {% for proveedor in proveedores %}
-                                                        <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
-                                                    {% endfor %}
-                                                </select>
+                                                <input class="form-control datepicker filters" style="position: relative; z-index: 100000;" id="txtFecha" type="text" data-dateformat="dd/mm/yy" value="{{ fecha.fecha|date("d/m/Y")}}">
                                             </div>
                                         </div>
                                     </div>
@@ -69,17 +55,18 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
-                                    <input type="hidden" name="compraId" id="compraId" value="{{ id }}" />
+                                    </div>      
                                     <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
                                         <a class="btn btn-primary" id="save">Guardar</a>
                                     </div>
                                 </div>
-                            </div>         
+                            </div>
+                            <input type="hidden" name="inventarioId" id="inventarioId" value="{{ id }}">
+                            <input type="hidden" name="tipo" id="tipo" value="editar">
                             <pre id="info" class="console">Click "Load" to load data from server</pre>
                             <div class="row">
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                    <div id="example6" style="width:100%;"></div>
+                                    <div id="tabla-inventario" style="width:100%;"></div>
                                 </div>
                             </div>   
                         </div>
@@ -95,99 +82,50 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts 'SmartAdmin/jquery-handsontable/handsontable.full.js'
-    %}
+    {% javascripts 'SmartAdmin/jquery-handsontable/handsontable.full.js' %}
     <script src="{{ asset_url }}" type="text/javascript"></script>
     {% endjavascripts %}
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#cmbProveedor, #cmbRubro').select2();
+            $(' #cmbRubro').select2();
             var myData, cantidadCambios = 0;
-            var $container = $("#example6");
+            var $container = $("#tabla-inventario");
             var $console = $("#info");
             $container.handsontable({
-                colHeaders: ['Cantidad', 'Insumo', 'Rubro', 'Precio unitario', 'Precio total'],
+                colHeaders: ['Conteo', 'Insumo', 'Rubro'],
                 columns: [
-                    {},
-                    {readOnly: true},
-                    {readOnly: true},
-                    {},
-                    {}
+                    {data: 0, type: 'numeric', format: '0,0.000', allowInvalid: false},
+                    {data: 1, readOnly: true},
+                    {data: 2, readOnly: true}
                 ],
                 columnSorting: true,
                 stretchH: "all",
                 tableClassName: ['table', 'table-hover', 'table-striped'],
                 afterChange: function (change, source) {
+                    //Guarda cambios realizados.
                     if (source === 'edit') {
                         cantidadCambios++;
                         $console.text(cantidadCambios + ' Cambio/s realizados.');
+                        var datarow = $container.handsontable('getDataAtRow', change[0][0]);
                         var row, col, r_len, c_len;
                         for (row = 0, r_len = myData.length; row < r_len; row++) {
                             for (col = 0, c_len = myData[row].length; col < c_len; col++) {
-                                if (row == change[0][0] && col == change[0][1]) {
+                                if (myData[row][col] == datarow[5]) {
                                     myData[row][col] = change[0][3];
                                 }
-                            }
-                        }
-
-
-                        //Calcular los totales
-                        if (source !== 'sum') {
-                            var cantidad, precioUnitario, precioTotal, sum, i;
-                            var totalizador = parseFloat($("#totalizador").val(), 3);
-
-                            for (var i = 0; i < change.length; i++) {
-                                var cambio = change[i];
-                                var row = cambio[0];
-
-                                cantidad = this.getDataAtCell(row, 0);
-                                precioUnitario = this.getDataAtCell(row, 3);
-                                precioTotal = this.getDataAtCell(row, 4);
-                                var precioTotalPosterior = precioTotal;
-                                var precioTotalAnterior = precioTotal;
-
-                                if (cambio[1] === 3) {
-                                    precioTotal = calcularTotal(cantidad, precioUnitario);
-                                    precioTotalPosterior = precioTotal;
-                                    this.setDataAtCell(cambio[0], 4, precioTotal, 'sum');
-
-                                    totalizador += (precioTotalPosterior - precioTotalAnterior);
-                                    $("#totalizador").val(totalizador);
-                                }
-
-                                if (cambio[1] === 4) {
-                                    precioUnitario = calcularUnitario(cantidad, precioTotal);
-                                    precioTotalPosterior = cambio[3];
-                                    precioTotalAnterior = cambio[2];
-                                    this.setDataAtCell(cambio[0], 3, precioUnitario, 'sum');
-
-                                    totalizador += (precioTotalPosterior - precioTotalAnterior);
-                                    $("#totalizador").val(totalizador);
-                                }
-                                //totalizador
-                                if (precioTotal == null || typeof precioTotal == "undefined" || precioTotal == "") {
-                                    precioTotal = 0;
-                                }
-
-                                if (typeof cambio[2] == "undefined" || cambio[2] == "") {
-                                    cambio[2] = 0;
-                                }
-
                             }
                         }
                     }
                 }
             });
 
-
-
             function actualizarGrilla() {
                 $.ajax({
-                    url: Routing.generate('compra_listar_detalle'),
+                    url: Routing.generate('inventario_listar_detalle'),
                     data: {
-                        compraId: function () {
-                            return $("#compraId").val();
+                        inventarioId: function(){
+                            return $('#inventarioId').val();
                         }
                     },
                     dataType: 'json',
@@ -200,16 +138,7 @@
                 });
             }
             ;
-
-            function calcularTotal(cantidad, precioUnitario) {
-                return parseFloat(cantidad * precioUnitario, 3);
-            }
-            ;
-            function calcularUnitario(cantidad, precioTotal) {
-                return parseFloat(precioTotal / cantidad, 3);
-            }
-            ;
-
+            
             $('#cmbRubro').on('change', function (event) {
                 var value = ('' + this.value).toLowerCase(), row, col, r_len, c_len;
                 var data = myData;
@@ -231,6 +160,40 @@
             });
 
             actualizarGrilla();
+
+            $('#save').click(function () {
+                var inventarioId = $("#inventarioId").val();
+                var tipo = $("#tipo").val();
+                var fecha = $("#txtFecha").val();
+                var arrayData = [];
+                myData.forEach(function (item) {
+                    var res = [];
+                    if(item[0] != ""){
+                        res[0] = item[0];
+                        res[1] = item[3];
+                        arrayData.push(res);
+                    }
+                });
+                $.ajax({
+                    url: Routing.generate('inventario_guardar'),
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {
+                        "tipo": tipo,
+                        "inventarioId": inventarioId,
+                        "data": arrayData,
+                        "fecha": fecha
+                    },
+                    success: function (res) {
+                        if (res === "no_errors") {
+                            window.location.href = "http://localhost:8000{{ path('inventario_listar') }}";
+                        }
+                        else {
+                            $console.text('Error!');
+                        }
+                    }
+                });
+            });
 
         });
     </script>

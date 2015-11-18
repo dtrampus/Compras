@@ -63,7 +63,7 @@
                                                 <select id="cmbRubro" class="filters" style="width:100%">
                                                     <option value="">Ingrese un rubro...</option>
                                                     {% for rubro in rubros %}
-                                                        <option value="{{ rubro.id }}">{{ rubro.descripcion }}</option>
+                                                        <option value="{{ rubro.descripcion }}">{{ rubro.descripcion }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
@@ -75,6 +75,7 @@
                                 </div>
                             </div>         
                             <pre id="info" class="console">Click "Load" to load data from server</pre>
+                            <input type="hidden" id="totalizador" value="0">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <div id="example6" style="width:100%;"></div>
@@ -106,11 +107,11 @@
             $container.handsontable({
                 colHeaders: ['Cantidad', 'Insumo', 'Rubro', 'Precio unitario', 'Precio total'],
                 columns: [
-                    {},
+                    {type: 'numeric', format: '0,0.000', allowInvalid: false},
                     {readOnly: true},
                     {readOnly: true},
-                    {},
-                    {}
+                    {type: 'numeric', format: '0,0.000', allowInvalid: false},
+                    {type: 'numeric', format: '0,0.000', allowInvalid: false}
                 ],
                 columnSorting: true,
                 stretchH: "all",
@@ -128,12 +129,51 @@
                                 }
                             }
                         }
-                        //traer valores
-                        var cantidad = $container.handsontable('getDataAtCell', change[0], 0);
-                        var precioUnitario = $container.handsontable('getDataAtCell', change[0], 3);
-                        var precioTotal = $container.handsontable('getDataAtCell', change[0], 4);
+
                         //Calcular los totales
-                        {#$container.handsontable('setDataAtCell', change[1], 4, '33');#}
+                        if (source !== 'sum') {
+                            var cantidad, precioUnitario, precioTotal, sum, i;
+                            var totalizador = parseFloat($("#totalizador").val(),3);
+                            
+                            for (var i = 0; i < change.length; i++) {
+                                var cambio = change[i];
+                                var row = cambio[0];
+
+                                cantidad = this.getDataAtCell(row, 0);
+                                precioUnitario = this.getDataAtCell(row, 3);
+                                precioTotal = this.getDataAtCell(row, 4);
+                                var precioTotalPosterior = precioTotal;
+                                var precioTotalAnterior = precioTotal;
+                                
+                                if (cambio[1] === 3) {
+                                    precioTotal = calcularTotal(cantidad, precioUnitario);
+                                    precioTotalPosterior = precioTotal;
+                                    this.setDataAtCell(cambio[0], 4, precioTotal, 'sum');
+                                    
+                                    totalizador += (precioTotalPosterior - precioTotalAnterior);
+                                    $("#totalizador").val(totalizador);
+                                }
+                                
+                                if (cambio[1] === 4) {
+                                    precioUnitario = calcularUnitario(cantidad, precioTotal);
+                                    precioTotalPosterior = cambio[3];
+                                    precioTotalAnterior = cambio[2];
+                                    this.setDataAtCell(cambio[0], 3, precioUnitario, 'sum');
+                                    
+                                    totalizador += (precioTotalPosterior - precioTotalAnterior);
+                                    $("#totalizador").val(totalizador);
+                                }
+                                //totalizador
+                                if (precioTotal == null || typeof precioTotal == "undefined" || precioTotal == "" ){
+                                    precioTotal = 0;
+                                }
+                                
+                                if (typeof cambio[2] == "undefined" || cambio[2] == ""){
+                                    cambio[2] = 0;
+                                }
+                                
+                            }
+                        }
                     }
                 }
             });
@@ -141,11 +181,6 @@
             function actualizarGrilla() {
                 $.ajax({
                     url: Routing.generate('mercaderia_listar_ajax'),
-                    data: {
-                        rubroId: function () {
-                            return "";
-                        }
-                    },
                     dataType: 'json',
                     type: 'POST',
                     success: function (res) {
@@ -157,6 +192,15 @@
             }
             ;
 
+            function calcularTotal(cantidad, precioUnitario) {
+                return parseFloat(cantidad * precioUnitario, 3);
+            }
+            ;
+            function calcularUnitario(cantidad, precioTotal) {
+                return parseFloat(precioTotal / cantidad, 3);
+            }
+            ;
+            
             $('#cmbRubro').on('change', function (event) {
                 var value = ('' + this.value).toLowerCase(), row, col, r_len, c_len;
                 var data = myData;
