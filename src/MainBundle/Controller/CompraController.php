@@ -58,11 +58,19 @@ class CompraController extends Controller {
         $idUsuario = $entity->getId();
 
         if ($tipo == "nueva") {
-            $this->get('main_compra_repositorio')->nuevo($data, $fecha, $proveedor, $idUsuario);
-            $this->get('session')->getFlashBag()->add('success', 'La compra se ha cargado correctamente!');
+            $nuevo = $this->get('main_compra_repositorio')->nuevo($data, $fecha, $proveedor, $idUsuario);
+            if($nuevo == null){
+                $this->get('session')->getFlashBag()->add('success', 'La compra se ha cargado correctamente!');
+            }else{
+                $this->get('session')->getFlashBag()->add('error', 'La compra no pudo darse de alta, ya que el turno no existe!');
+            }
         } else {
-            $this->get('main_compra_repositorio')->editar($data, $fecha, $proveedor, $idCompra);
-            $this->get('session')->getFlashBag()->add('success', 'La compra se ha editado correctamente!');
+            $editar = $this->get('main_compra_repositorio')->editar($data, $fecha, $proveedor, $idCompra);
+            if($editar == null){
+                $this->get('session')->getFlashBag()->add('success', 'La compra se ha modificado correctamente!');
+            }else{
+                $this->get('session')->getFlashBag()->add('error', 'La compra no pudo modificarse, ya que el turno no existe!');
+            }
         }
         
         return new JsonResponse("no_errors");

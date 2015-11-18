@@ -46,7 +46,7 @@
                                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                         <div class="form-group">
                                             <label class="col-md-3 control-label" style="padding-top: 7px;">Proveedor:</label>
-                                            <div class="col-md-9">
+                                            <div class="col-md-9 proveedor" >
                                                 <select id="cmbProveedor" class="filters" style="width:100%">
                                                     <option value="">Ingrese un proveedor...</option>
                                                     {% for proveedor in proveedores %}
@@ -71,7 +71,7 @@
                                     </div>    
                                     <input type="hidden" name="tipo" id="tipo" value="nueva" />
                                     <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
-                                        <a class="btn btn-primary" id="save">Guardar</a>
+                                        <button type="submit" id="save" name="save" class="btn-primary btn">Guardar</button>
                                     </div>
                                 </div>
                             </div>         
@@ -131,89 +131,103 @@
                                     myData[row][col] = change[0][3];
                                 }
                             }
-                        }       
+                        }
                         //traer valores
                         var cantidad = $container.handsontable('getDataAtCell', change[0], 0);
                         var precioUnitario = $container.handsontable('getDataAtCell', change[0], 3);
                         var precioTotal = $container.handsontable('getDataAtCell', change[0], 4);
                         //Calcular los totales
-                        {#$container.handsontable('setDataAtCell', change[1], 4, '33');#}
+        {#$container.handsontable('setDataAtCell', change[1], 4, '33');#}
+                        }
                     }
+                });
+
+                function actualizarGrilla() {
+                    $.ajax({
+                        url: Routing.generate('mercaderia_listar_ajax'),
+                        dataType: 'json',
+                        type: 'POST',
+                        success: function (res) {
+                            myData = res;
+                            $container.handsontable('loadData', res);
+                            $console.text('Mercadería Cargada.');
+                        }
+                    });
                 }
-            });
+                ;
 
-            function actualizarGrilla() {
-                $.ajax({
-                    url: Routing.generate('mercaderia_listar_ajax'),
-                    dataType: 'json',
-                    type: 'POST',
-                    success: function (res) {
-                        myData = res;
-                        $container.handsontable('loadData', res);
-                        $console.text('Mercadería Cargada.');
-                    }
-                });
-            }
-            ;
-
-            $('#cmbRubro').on('change', function (event) {
-                var value = ('' + this.value).toLowerCase(), row, col, r_len, c_len;
-                var data = myData;
-                var searcharray = [];
-                if (typeof value != "undefined") {
-                    for (row = 0, r_len = data.length; row < r_len; row++) {
-                        for (col = 0, c_len = data[row].length; col < c_len; col++) {
-                            var dat = data[row];
-                            if (data[row][2] == null) {
-                                continue;
-                            }
-                            if (('' + data[row][2]).toLowerCase().indexOf(value) > -1) {
-                                searcharray.push(data[row]);
-                                break;
+                $('#cmbRubro').on('change', function (event) {
+                    var value = ('' + this.value).toLowerCase(), row, col, r_len, c_len;
+                    var data = myData;
+                    var searcharray = [];
+                    if (typeof value != "undefined") {
+                        for (row = 0, r_len = data.length; row < r_len; row++) {
+                            for (col = 0, c_len = data[row].length; col < c_len; col++) {
+                                var dat = data[row];
+                                if (data[row][2] == null) {
+                                    continue;
+                                }
+                                if (('' + data[row][2]).toLowerCase().indexOf(value) > -1) {
+                                    searcharray.push(data[row]);
+                                    break;
+                                }
                             }
                         }
+                        $container.handsontable('loadData', searcharray);
                     }
-                    $container.handsontable('loadData', searcharray);
-                }
-            });
+                });
 
-            actualizarGrilla();
+                actualizarGrilla();
 
-            $('#save').click(function () {
-                var tipo = $("#tipo").val();
-                var fecha = $("#txtFecha").val();
-                var proveedor = $("#cmbProveedor").val();
-                var arrayData = [];
-                myData.forEach(function (item) {
-                    var res = [];
-                    if(item[0] != "" && item[3] != "" && item[4] != ""){
-                        if (item[0] != "0" && item[3] != "0" && item[4] != "0") {
-                            res[0] = item[0];
-                            res[1] = item[5];
-                            res[2] = item[3]
-                            res[3] = item[4];
-                            arrayData.push(res);
+                $('#save').click(function () {
+                    var tipo = $("#tipo").val();
+                    var fecha = $("#txtFecha").val();
+                    var proveedor = $("#cmbProveedor").val();
+                    var arrayData = [];
+                    var validar_contenido = "0";
+                    myData.forEach(function (item) {
+                        var res = [];
+                        if (item[0] != "" && item[3] != "" && item[4] != "") {
+                            if (item[0] != "0" && item[3] != "0" && item[4] != "0") {
+                                res[0] = item[0];
+                                res[1] = item[5];
+                                res[2] = item[3]
+                                res[3] = item[4];
+                                arrayData.push(res);
+                            }
+                            validar_contenido = "1";
+                        }
+                    });
+                    if (proveedor == "") {
+                        if ($(".has-error").val() != "") {
+                            $('#cmbProveedor').closest('.proveedor').append("<span for='cmbProveedor' class='help-block'>Debe elegir un proveedor</span>").addClass('has-error');
+                        }
+                    }
+                    else {
+                        if(validar_contenido == "1"){
+                        $("#save").prop('disabled', true);
+                        $.ajax({
+                            url: Routing.generate('compra_guardar'),
+                            dataType: 'json',
+                            type: 'POST',
+                            data: {
+                                "tipo": tipo,
+                                "data": arrayData,
+                                "fecha": fecha,
+                                "proveedor": proveedor
+                            },
+                            success: function (result) {
+                                if (result === "no_errors") {
+                                    window.location.href = "{{ path('compra_listar') }}";
+                                }
+                            }
+                        });
                         }
                     }
                 });
-                $.ajax({
-                    url: Routing.generate('compra_guardar'),
-                    dataType: 'json',
-                    type: 'POST',
-                    data: {
-                        "tipo": tipo,
-                        "data": arrayData,
-                        "fecha": fecha,
-                        "proveedor": proveedor
-                    },
-                    success: function (result) {
-                        if(result === "no_errors"){
-                            window.location.href = "{{ path('compra_listar') }}";
-                        }
-                    }
-                });
-            });
+                
+                
 
-        });
+            });
     </script>
 {% endblock %}

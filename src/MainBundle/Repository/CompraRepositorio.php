@@ -79,37 +79,47 @@ class CompraRepositorio {
         $resultado = $consulta->fetch();
         return $resultado;
     }
-    
+
     public function nuevo($data, $fecha, $proveedor, $idUsuario) {
         $conn = $this->doctrine->getEntityManager("dinamica")->getConnection();
         $conn->beginTransaction();
         $total = "5000";
         try {
-            $query = "
-                        INSERT INTO blcompras (fecha, total, blproveedores_id, users_id)
-                            VALUES ('$fecha', $total, $proveedor, $idUsuario)
-                    ";
+            $query = "SELECT id FROM blturnos WHERE date(fecha_apertura)=STR_TO_DATE('$fecha','%Y-%m-%d')";
 
             $consulta = $conn->prepare($query);
             $consulta->execute();
-            $idCompra = $conn->lastInsertId();
+            $resultado = $consulta->fetch();
+            $idTurno = $resultado['id'];
 
-//            $conn->commit();
-
-            foreach ($data as $columna) {
-                $cantidad = $columna[0];
-                $mercaderia = $columna[1];
-                $importeUnitario = $columna[2];
-
+            if ($idTurno == null) {
+                $mensaje = "0";
+                return $mensaje;
+            } else {
                 $query2 = "
-                        INSERT INTO blcompras_detalle (cantidad, importe, blcompras_id, blmercaderia_id)
-                            VALUES ($cantidad, $importeUnitario, $idCompra, $mercaderia)
+                        INSERT INTO blcompras (fecha, total, blproveedores_id, users_id, blturnos_id)
+                            VALUES ('$fecha', $total, $proveedor, $idUsuario, $idTurno)
                     ";
 
                 $consulta = $conn->prepare($query2);
                 $consulta->execute();
+                $idCompra = $conn->lastInsertId();
+
+                foreach ($data as $columna) {
+                    $cantidad = $columna[0];
+                    $mercaderia = $columna[1];
+                    $importeUnitario = $columna[2];
+
+                    $query2 = "
+                        INSERT INTO blcompras_detalle (cantidad, importe, blcompras_id, blmercaderia_id)
+                            VALUES ($cantidad, $importeUnitario, $idCompra, $mercaderia)
+                    ";
+
+                    $consulta = $conn->prepare($query2);
+                    $consulta->execute();
+                }
+                $conn->commit();
             }
-            $conn->commit();
         } catch (Exception $e) {
             $conn->rollback();
             throw $e;
@@ -120,20 +130,31 @@ class CompraRepositorio {
         $conn = $this->doctrine->getEntityManager("dinamica")->getConnection();
         $conn->beginTransaction();
         try {
-            $query = "
-                DELETE FROM blcompras_detalle WHERE blcompras_id = $idCompra
-                ";
+            $query = "SELECT id FROM blturnos WHERE date(fecha_apertura)=STR_TO_DATE('$fecha','%Y-%m-%d')";
 
             $consulta = $conn->prepare($query);
             $consulta->execute();
+            $resultado = $consulta->fetch();
+            $idTurno = $resultado['id'];
 
+            if ($idTurno == null) {
+                $mensaje = "0";
+                return $mensaje;
+            } else {
             $query2 = "
-                UPDATE blcompras
-                SET fecha = '$fecha' , blproveedores_id = $proveedor
-                WHERE id = $idCompra
+                DELETE FROM blcompras_detalle WHERE blcompras_id = $idCompra
                 ";
 
             $consulta = $conn->prepare($query2);
+            $consulta->execute();
+
+            $query3 = "
+                UPDATE blcompras
+                SET fecha = '$fecha', blproveedores_id = $proveedor, blturnos_id = $idTurno
+                WHERE id = $idCompra
+                ";
+
+            $consulta = $conn->prepare($query3);
             $consulta->execute();
 
             foreach ($data as $columna) {
@@ -141,21 +162,23 @@ class CompraRepositorio {
                 $mercaderia = $columna[1];
                 $importeUnitario = $columna[2];
 
-                $query3 = "
+                $query4 = "
                         INSERT INTO blcompras_detalle (cantidad, importe, blcompras_id, blmercaderia_id)
                             VALUES ($cantidad, $importeUnitario, $idCompra, $mercaderia)
                     ";
 
-                $consulta = $conn->prepare($query3);
+                $consulta = $conn->prepare($query4);
                 $consulta->execute();
             }
             $conn->commit();
+            }
         } catch (Exception $e) {
             $conn->rollback();
             throw $e;
         }
     }
     
+
     public function eliminar($id) {
         $conn = $this->doctrine->getEntityManager("dinamica")->getConnection();
         $conn->beginTransaction();
@@ -167,8 +190,8 @@ class CompraRepositorio {
                 AND cd.blcompras_id = $id
                 ";
 
-                $consulta = $conn->prepare($query);
-                $consulta->execute();
+            $consulta = $conn->prepare($query);
+            $consulta->execute();
 
             $conn->commit();
         } catch (Exception $e) {
