@@ -1,8 +1,8 @@
 {% extends "base.html.twig" %}
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets  'SmartAdmin/jquery-handsontable/handsontable.full.css'
-                                'SmartAdmin/jquery-handsontable/handsontable.bootstrap.css'
+    {% stylesheets  'Metronic/assets/global/plugins/jquery-handsontable/handsontable.full.css'
+                    'Metronic/assets/global/plugins/jquery-handsontable/handsontable.bootstrap.css'
                                  filter='cssrewrite' %}
     <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"  />
     {% endstylesheets %}
@@ -12,9 +12,10 @@
 {% block content %}
     <div class="row">
         <!-- col -->
-        <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-            <h1 class="page-title txt-color-blueDark"><i class="fa fa-shopping-cart"></i> Gestión de Compras <span>>
-                    Editar Compra </span></h1>
+        <div class="col-md-12">
+            <h3 class="page-title"> Gestión de Compras
+                <small> > editar compra</small>
+            </h3>    
         </div>
         <!-- end col -->
     </div>
@@ -23,69 +24,67 @@
         <!-- row -->
         <div class="row">
             <!-- NEW WIDGET START -->
-            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="jarviswidget jarviswidget-color-white" id="wid-id-0" data-widget-editbutton="false">
-                    <header>
-                        <span class="widget-icon"> <i class="fa fa-shopping-cart"></i> </span>
-                        <h2> Editar Compra </h2>
-                    </header>
-                    <div>
-                        <div class="jarviswidget-editbox">
-                            <!-- This area used as dropdown edit box -->
-                        </div>
-                        <div class="widget-body no-padding" >
-                            <div class="widget-body-toolbar">
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
-                                        <div class="form-group">
-                                            <label class="col-md-2 control-label" style="padding-top: 7px;">Fecha:</label>
-                                            <div class="col-md-10">
-                                                <input class="form-control datepicker filters" style="position: relative; z-index: 100000;" id="txtFecha" type="text" data-dateformat="dd/mm/yy" value="{{ "now"|date("d/m/Y")}}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                        <div class="form-group">
-                                            <label class="col-md-3 control-label" style="padding-top: 7px;">Proveedor:</label>
-                                            <div class="col-md-9">
-                                                <select id="cmbProveedor" class="filters" style="width:100%">
-                                                    <option value="">Ingrese un proveedor...</option>
-                                                    {% for proveedor in proveedores %}
-                                                        <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                        <div class="form-group">
-                                            <label class="col-md-2 control-label" style="padding-top: 7px;">Rubro:</label>
-                                            <div class="col-md-9">
-                                                <select id="cmbRubro" class="filters" style="width:100%">
-                                                    <option value="">Ingrese un rubro...</option>
-                                                    {% for rubro in rubros %}
-                                                        <option value="{{ rubro.descripcion }}">{{ rubro.descripcion }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <input type="hidden" name="compraId" id="compraId" value="{{ id }}" />
-                                    <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">
-                                        <a class="btn btn-primary" id="save">Guardar</a>
-                                    </div>
-                                </div>
-                            </div>         
-                            <pre id="info" class="console">Click "Load" to load data from server</pre>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                    <div id="example6" style="width:100%;"></div>
-                                </div>
-                            </div>   
+            <div class="col-md-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption font-dark">
+                            <i class="icon-settings font-dark"></i>
+                            <span class="caption-subject bold uppercase"> Compra</span>
                         </div>
                     </div>
+                    <div class="portlet-body">
+                        <div class="table-toolbar">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label" style="padding-top: 7px;">Fecha:</label>
+                                        <div class="col-md-10">
+                                            <input class="form-control datepicker filters" style="position: relative; z-index: 100000;" id="txtFecha" type="text" data-dateformat="dd/mm/yy" value="{{ "now"|date("d/m/Y")}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" style="padding-top: 7px;">Proveedor:</label>
+                                        <div class="col-md-9">
+                                            <select id="cmbProveedor" class="filters" style="width:100%">
+                                                <option value="">Ingrese un proveedor...</option>
+                                                {% for proveedor in proveedores %}
+                                                    <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label" style="padding-top: 7px;">Rubro:</label>
+                                        <div class="col-md-9">
+                                            <select id="cmbRubro" class="filters" style="width:100%">
+                                                <option value="">Ingrese un rubro...</option>
+                                                {% for rubro in rubros %}
+                                                    <option value="{{ rubro.descripcion }}">{{ rubro.descripcion }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <a class="btn btn-primary" id="save">Guardar</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <input type="hidden" id="totalizador" value="0">
+                                <input type="hidden" name="tipo" id="tipo" value="editar">
+                                <input type="hidden" name="compraId" id="compraId" value="{{ id }}" />
+                                <div id="example6" style="width:100%;"></div>
+                            </div>
+                        </div> 
+                    </div>
                 </div>
-            </article>
+            </div>
             <!-- WIDGET END -->
         </div>
         <!-- end row -->
@@ -95,7 +94,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts 'SmartAdmin/jquery-handsontable/handsontable.full.js'
+    {% javascripts 'Metronic/assets/global/plugins/jquery-handsontable/handsontable.full.js'
     %}
     <script src="{{ asset_url }}" type="text/javascript"></script>
     {% endjavascripts %}
