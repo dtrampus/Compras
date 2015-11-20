@@ -73,17 +73,16 @@ class CompraRepositorio {
     }
 
     public function listarDatos($id) {
-        $query = "SELECT fecha,blproveedores_id AS proveedor FROM blcompras WHERE id = $id";
+        $query = "SELECT fecha,total,blproveedores_id AS proveedor FROM blcompras WHERE id = $id";
         $consulta = $this->doctrine->getEntityManager("dinamica")->getConnection()->prepare($query);
         $consulta->execute();
         $resultado = $consulta->fetch();
         return $resultado;
     }
 
-    public function nuevo($data, $fecha, $proveedor, $idUsuario) {
+    public function nuevo($data, $fecha, $proveedor, $total, $idUsuario) {
         $conn = $this->doctrine->getEntityManager("dinamica")->getConnection();
         $conn->beginTransaction();
-        $total = "5000";
         try {
             $query = "SELECT id FROM blturnos WHERE date(fecha_apertura)=STR_TO_DATE('$fecha','%Y-%m-%d')";
 
@@ -126,7 +125,7 @@ class CompraRepositorio {
         }
     }
 
-    public function editar($data, $fecha, $proveedor, $idCompra) {
+    public function editar($data, $fecha, $proveedor, $total, $idCompra) {
         $conn = $this->doctrine->getEntityManager("dinamica")->getConnection();
         $conn->beginTransaction();
         try {
@@ -150,7 +149,7 @@ class CompraRepositorio {
 
             $query3 = "
                 UPDATE blcompras
-                SET fecha = '$fecha', blproveedores_id = $proveedor, blturnos_id = $idTurno
+                SET fecha = '$fecha', blproveedores_id = $proveedor, blturnos_id = $idTurno, total = $total
                 WHERE id = $idCompra
                 ";
 

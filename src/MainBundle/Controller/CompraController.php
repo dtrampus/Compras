@@ -50,6 +50,7 @@ class CompraController extends Controller {
         $fecha1 = date_create_from_format('d/m/Y', $request->request->get("fecha"));
         $fecha = date_format($fecha1,"Y-m-d H:i:s");
         $proveedor = $request->request->get("proveedor");
+        $total = $request->request->get("total");
         $idCompra = $request->request->get("idCompra");
 
         $em = $this->getDoctrine()->getManager();
@@ -58,22 +59,24 @@ class CompraController extends Controller {
         $idUsuario = $entity->getId();
 
         if ($tipo == "nueva") {
-            $nuevo = $this->get('main_compra_repositorio')->nuevo($data, $fecha, $proveedor, $idUsuario);
+            $nuevo = $this->get('main_compra_repositorio')->nuevo($data, $fecha, $proveedor, $total, $idUsuario);
             if($nuevo == null){
                 $this->get('session')->getFlashBag()->add('success', 'La compra se ha cargado correctamente!');
             }else{
-                $this->get('session')->getFlashBag()->add('error', 'La compra no pudo darse de alta, ya que el turno no existe!');
+                $error = "La compra no pudo darse de alta, ya que el turno no existe!";
+                return new JsonResponse($error,500);
             }
         } else {
-            $editar = $this->get('main_compra_repositorio')->editar($data, $fecha, $proveedor, $idCompra);
+            $editar = $this->get('main_compra_repositorio')->editar($data, $fecha, $proveedor, $total, $idCompra);
             if($editar == null){
                 $this->get('session')->getFlashBag()->add('success', 'La compra se ha modificado correctamente!');
             }else{
-                $this->get('session')->getFlashBag()->add('error', 'La compra no pudo modificarse, ya que el turno no existe!');
+                $error = "La compra no pudo modificarse, ya que el turno no existe!";
+                return new JsonResponse($error,500);
             }
         }
-        
-        return new JsonResponse("no_errors");
+        $mensaje = "";
+        return new JsonResponse($mensaje,200);
     }
 
     public function listarDetalleAction(Request $request) {
