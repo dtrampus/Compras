@@ -2,8 +2,7 @@
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets  'Metronic/assets/global/plugins/jquery-handsontable/handsontable.full.css'
-                    'Metronic/assets/global/plugins/jquery-handsontable/handsontable.bootstrap.css'
-                                 filter='cssrewrite' %}
+                    'Metronic/assets/global/plugins/jquery-handsontable/handsontable.bootstrap.css' filter='cssrewrite' %}
     <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"  />
     {% endstylesheets %}
 {% endblock %}
@@ -281,7 +280,7 @@
                             window.location.href = "{{ path('compra_listar') }}";
                         },
                         error: function (xhr, textStatus, errorThrow) {
-                            $("#mensaje").html("<div class='alert alert-danger fade in'><button class='close' data-dismiss='alert'>×</button><i class='fa-fw fa fa-times'></i>" + xhr.responseJSON + "</div>");
+                            $("#mensaje").html('<div id="prefix_582245866088" class="custom-alerts alert alert-danger fade in"><button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button><i class="fa-lg fa fa-warning"></i> ' + xhr.responseJSON + '</div>');
                         }
                     });
                 }

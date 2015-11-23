@@ -47,7 +47,7 @@
                                     <div class="form-group">
                                         <label class="col-md-3 control-label" style="padding-top: 7px;">Proveedor:</label>
                                         <div class="col-md-9">
-                                            <select id="cmbProveedor" class="filters" style="width:100%">
+                                            <select id="cmbProveedor" class="form-control input-m input-medium input-inline" style="width:100%">
                                                 <option value="">Ingrese un proveedor...</option>
                                                 {% for proveedor in proveedores %}
                                                     <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
@@ -284,7 +284,7 @@
                                 window.location.href = "{{ path('compra_listar') }}";
                             },
                             error: function (xhr, textStatus, errorThrow) {
-                                $("#mensaje").html("<div class='alert alert-danger fade in'><button class='close' data-dismiss='alert'>×</button><i class='fa-fw fa fa-times'></i>"+xhr.responseJSON+"</div>");
+                                $("#mensaje").html('<div id="prefix_582245866088" class="custom-alerts alert alert-danger fade in"><button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button><i class="fa-lg fa fa-warning"></i> ' + xhr.responseJSON + '</div>');
                             }
                         });
                     }

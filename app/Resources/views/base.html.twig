@@ -12,7 +12,8 @@
                                 'Metronic/assets/global/plugins/simple-line-icons/simple-line-icons.min.css'
                                 'Metronic/assets/global/plugins/bootstrap/css/bootstrap.min.css'
                                 'Metronic/assets/global/plugins/uniform/css/uniform.default.css'
-                                'Metronic/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css'
+                                'Metronic/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.css'
+                                'Metronic/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css'
 
                                 'Metronic/assets/global/css/components-md.min.css'
                                 'Metronic/assets/global/css/plugins-md.min.css'
@@ -89,7 +90,7 @@ Use search to find needed section.
                 <!-- BEGIN LOGO -->
                 <div class="page-logo">
                     <a href="index.html">
-                        <img src="../assets/layouts/layout/img/logo.png" alt="logo" class="logo-default" /> </a>
+                        <img src="../Metronic/assets/layouts/layout/img/logo.png" alt="logo" class="logo-default" /> </a>
                     <div class="menu-toggler sidebar-toggler"> </div>
                 </div>
                 <!-- END LOGO -->
@@ -103,8 +104,8 @@ Use search to find needed section.
                         <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                         <li class="dropdown dropdown-user">
                             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                <img alt="" class="img-circle" src="../assets/layouts/layout/img/avatar3_small.jpg" />
-                                <span class="username username-hide-on-mobile"> Nick </span>
+                                <img alt class="img-circle" src="../Metronic/assets/layouts/layout/img/avatar3_small.jpg" />
+                                <span class="username username-hide-on-mobile"> Usuario </span>
                                 <i class="fa fa-angle-down"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-default">
@@ -151,12 +152,12 @@ Use search to find needed section.
                         </li>
                         <!-- DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element -->
                         
-                        <li class="nav-item start active open">
+                        <li class="nav-item ">
                             <a href="{{ path('main_home') }}" class="nav-link nav-toggle">
                                 <i class="icon-home"></i>
                                 <span class="title">Home</span>
                                 <span class="selected"></span>
-                                <span class="arrow open"></span>
+                                <span class="arrow"></span>
                             </a>
                         </li>
                         <li class="nav-item  ">
@@ -293,6 +294,7 @@ Use search to find needed section.
                                 'Metronic/assets/global/plugins/uniform/jquery.uniform.min.js'
                                 'Metronic/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js'
                                 'Metronic/assets/global/plugins/select2/js/select2.min.js'
+                                'Metronic/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js'
                                 
                                 'Metronic/assets/global/scripts/app.min.js'
 

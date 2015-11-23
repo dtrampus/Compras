@@ -11,7 +11,7 @@
                         <h2>Usted se encuentra en:</h2>
                         <div class="form-group">
                             <form name="sucursal-form" method="post" id="sucursal-form" action="{{ path("sucursal_seleccion") }}">
-                                <select id="eleccion-sucursal" name="sucursal" required="required" class="select2" style="width:100%">
+                                <select id="eleccion-sucursal" name="sucursal" required="required" class="form-control input-m input-medium input-inline" style="width:100%">
                                     <option value="">Elige una sucursal</option>    
                                     {% for sucursal in sucursales %}
                                         <option value="{{ sucursal.id }}">{{ sucursal.nombre }}</option>
