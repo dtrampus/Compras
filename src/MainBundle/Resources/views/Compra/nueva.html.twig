@@ -18,6 +18,7 @@
         </div>
         <!-- end col -->
     </div>
+    <div id="mensaje" ></div>
     <!-- widget grid -->
     <section id="widget-grid" class="">
         <!-- row -->
@@ -105,11 +106,11 @@
             $container.handsontable({
                 colHeaders: ['Cantidad', 'Insumo', 'Rubro', 'Precio unitario', 'Precio total'],
                 columns: [
-                    {type: 'numeric', format: '0,0.000', allowInvalid: false},
-                    {readOnly: true},
-                    {readOnly: true},
-                    {type: 'numeric', format: '0,0.000', allowInvalid: false},
-                    {type: 'numeric', format: '0,0.000', allowInvalid: false}
+                    {data: 0, type: 'numeric', format: '0,0.000', allowInvalid: false},
+                    {data: 1, readOnly: true},
+                    {data: 2, readOnly: true},
+                    {data: 3, type: 'numeric', format: '0,0.000', allowInvalid: false},
+                    {data: 4, type: 'numeric', format: '0,0.000', allowInvalid: false}
                 ],
                 columnSorting: true,
                 stretchH: "all",
@@ -119,10 +120,11 @@
                     if (source === 'edit') {
                         cantidadCambios++;
                         $console.text(cantidadCambios + ' Cambio/s realizados.');
+                        var datarow = $container.handsontable('getDataAtRow', change[0][0]);
                         var row, col, r_len, c_len;
                         for (row = 0, r_len = myData.length; row < r_len; row++) {
                             for (col = 0, c_len = myData[row].length; col < c_len; col++) {
-                                if (row == change[0][0] && col == change[0][1]) {
+                                if (myData[row][col] == datarow[5]) {
                                     myData[row][col] = change[0][3];
                                 }
                             }
@@ -131,8 +133,8 @@
                         //Calcular los totales
                         if (source !== 'sum') {
                             var cantidad, precioUnitario, precioTotal, sum, i;
-                            var totalizador = parseFloat($("#totalizador").val(),3);
-                            
+                            var totalizador = parseFloat($("#totalizador").html(), 3);
+
                             for (var i = 0; i < change.length; i++) {
                                 var cambio = change[i];
                                 var row = cambio[0];
@@ -142,34 +144,36 @@
                                 precioTotal = this.getDataAtCell(row, 4);
                                 var precioTotalPosterior = precioTotal;
                                 var precioTotalAnterior = precioTotal;
-                                
+
                                 if (cambio[1] === 3) {
                                     precioTotal = calcularTotal(cantidad, precioUnitario);
                                     precioTotalPosterior = precioTotal;
                                     this.setDataAtCell(cambio[0], 4, precioTotal, 'sum');
-                                    
+
                                     totalizador += (precioTotalPosterior - precioTotalAnterior);
-                                    $("#totalizador").val(totalizador);
+                                    var totalformato = totalizador.toFixed(2);
+                                    $("#totalizador").html(totalformato);
                                 }
-                                
+
                                 if (cambio[1] === 4) {
                                     precioUnitario = calcularUnitario(cantidad, precioTotal);
                                     precioTotalPosterior = cambio[3];
                                     precioTotalAnterior = cambio[2];
                                     this.setDataAtCell(cambio[0], 3, precioUnitario, 'sum');
-                                    
+
                                     totalizador += (precioTotalPosterior - precioTotalAnterior);
-                                    $("#totalizador").val(totalizador);
+                                    var totalformato = totalizador.toFixed(2);
+                                    $("#totalizador").html(totalformato);
                                 }
                                 //totalizador
-                                if (precioTotal == null || typeof precioTotal == "undefined" || precioTotal == "" ){
+                                if (precioTotal == null || typeof precioTotal == "undefined" || precioTotal == "") {
                                     precioTotal = 0;
                                 }
-                                
-                                if (typeof cambio[2] == "undefined" || cambio[2] == ""){
+
+                                if (typeof cambio[2] == "undefined" || cambio[2] == "") {
                                     cambio[2] = 0;
                                 }
-                                
+
                             }
                         }
                     }
@@ -198,7 +202,21 @@
                 return parseFloat(precioTotal / cantidad, 3);
             }
             ;
-            
+
+            function actualizarGrilla() {
+                $.ajax({
+                    url: Routing.generate('mercaderia_listar_ajax'),
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function (res) {
+                        myData = res;
+                        $container.handsontable('loadData', res);
+                        $console.text('Mercadería Cargada.');
+                    }
+                });
+            }
+            ;
+
             $('#cmbRubro').on('change', function (event) {
                 var value = ('' + this.value).toLowerCase(), row, col, r_len, c_len;
                 var data = myData;
@@ -206,6 +224,7 @@
                 if (typeof value != "undefined") {
                     for (row = 0, r_len = data.length; row < r_len; row++) {
                         for (col = 0, c_len = data[row].length; col < c_len; col++) {
+                            var dat = data[row];
                             if (data[row][2] == null) {
                                 continue;
                             }
@@ -222,24 +241,56 @@
             actualizarGrilla();
 
             $('#save').click(function () {
-                $.ajax({
-                    url: Routing.generate('compra_guardar'),
-                    dataType: 'json',
-                    type: 'GET',
-                    data: $container.handsontable('getData'),
-                    success: function (res) {
-                        var response = JSON.parse(res.response);
-
-                        if (response.result === 'ok') {
-                            $console.text('Compra guardada.');
+                var tipo = $("#tipo").val();
+                var fecha = $("#txtFecha").val();
+                var proveedor = $("#cmbProveedor").val();
+                var total = $("#totalizador").html();
+                var arrayData = [];
+                var validar_contenido = "0";
+                myData.forEach(function (item) {
+                    var res = [];
+                    if (item[0] != "" && item[3] != "" && item[4] != "") {
+                        if (item[0] != "0" && item[3] != "0" && item[4] != "0") {
+                            res[0] = item[0];
+                            res[1] = item[5];
+                            res[2] = item[3]
+                            res[3] = item[4];
+                            arrayData.push(res);
                         }
-                        else {
-                            $console.text('Error!');
-                        }
+                        validar_contenido = "1";
                     }
                 });
-            });
+                if (proveedor == "") {
+                    if ($(".has-error").val() != "") {
+                        $('#cmbProveedor').closest('.proveedor').append("<span for='cmbProveedor' class='help-block'>Debe elegir un proveedor</span>").addClass('has-error');
+                    }
+                }
+                else {
+                    if (validar_contenido == "1") {
+                        $.ajax({
+                            url: Routing.generate('compra_guardar'),
+                            dataType: 'json',
+                            type: 'POST',
+                            sync: false,
+                            data: {
+                                "tipo": tipo,
+                                "data": arrayData,
+                                "fecha": fecha,
+                                "proveedor": proveedor,
+                                "total": total
+                            },
+                            success: function (result) {
+                                $("#save").prop('disabled', true);
+                                window.location.href = "{{ path('compra_listar') }}";
+                            },
+                            error: function (xhr, textStatus, errorThrow) {
+                                $("#mensaje").html("<div class='alert alert-danger fade in'><button class='close' data-dismiss='alert'>×</button><i class='fa-fw fa fa-times'></i>"+xhr.responseJSON+"</div>");
+                            }
+                        });
+                    }
+                }
 
+            });
         });
     </script>
 {% endblock %}

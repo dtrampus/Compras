@@ -19,6 +19,7 @@
         </div>
         <!-- end col -->
     </div>
+    <div id="mensaje" ></div>
     <!-- widget grid -->
     <section id="widget-grid" class="">
         <!-- row -->
@@ -108,11 +109,11 @@
             $container.handsontable({
                 colHeaders: ['Cantidad', 'Insumo', 'Rubro', 'Precio unitario', 'Precio total'],
                 columns: [
-                    {},
-                    {readOnly: true},
-                    {readOnly: true},
-                    {},
-                    {}
+                    {data: 0, type: 'numeric', format: '0,0.000', allowInvalid: false},
+                    {data: 1, readOnly: true},
+                    {data: 2, readOnly: true},
+                    {data: 3, type: 'numeric', format: '0,0.000', allowInvalid: false},
+                    {data: 4, type: 'numeric', format: '0,0.000', allowInvalid: false}
                 ],
                 columnSorting: true,
                 stretchH: "all",
@@ -121,20 +122,20 @@
                     if (source === 'edit') {
                         cantidadCambios++;
                         $console.text(cantidadCambios + ' Cambio/s realizados.');
+                        var datarow = $container.handsontable('getDataAtRow', change[0][0]);
                         var row, col, r_len, c_len;
                         for (row = 0, r_len = myData.length; row < r_len; row++) {
                             for (col = 0, c_len = myData[row].length; col < c_len; col++) {
-                                if (row == change[0][0] && col == change[0][1]) {
+                                if (myData[row][col] == datarow[5]) {
                                     myData[row][col] = change[0][3];
                                 }
                             }
                         }
-
-
+                        
                         //Calcular los totales
                         if (source !== 'sum') {
                             var cantidad, precioUnitario, precioTotal, sum, i;
-                            var totalizador = parseFloat($("#totalizador").val(), 3);
+                            var totalizador = parseFloat($("#totalizador").html(), 3);
 
                             for (var i = 0; i < change.length; i++) {
                                 var cambio = change[i];
@@ -152,7 +153,8 @@
                                     this.setDataAtCell(cambio[0], 4, precioTotal, 'sum');
 
                                     totalizador += (precioTotalPosterior - precioTotalAnterior);
-                                    $("#totalizador").val(totalizador);
+                                    var totalformato = totalizador.toFixed(2);
+                                    $("#totalizador").html(totalformato);
                                 }
 
                                 if (cambio[1] === 4) {
@@ -162,7 +164,8 @@
                                     this.setDataAtCell(cambio[0], 3, precioUnitario, 'sum');
 
                                     totalizador += (precioTotalPosterior - precioTotalAnterior);
-                                    $("#totalizador").val(totalizador);
+                                    var totalformato = totalizador.toFixed(2);
+                                    $("#totalizador").html(totalformato);
                                 }
                                 //totalizador
                                 if (precioTotal == null || typeof precioTotal == "undefined" || precioTotal == "") {
@@ -182,6 +185,7 @@
 
 
             function actualizarGrilla() {
+
                 $.ajax({
                     url: Routing.generate('compra_listar_detalle'),
                     data: {
@@ -231,6 +235,57 @@
 
             actualizarGrilla();
 
+            $('#save').click(function () {
+                var idCompra = $("#compraId").val();
+                var fecha = $("#txtFecha").val();
+                var proveedor = $("#cmbProveedor").val();
+                var total = $("#totalizador").html();
+                var tipo = $("#tipo").val();
+                var arrayData = [];
+                myData.forEach(function (item) {
+                    var res = [];
+                    if (item[0] != null && item[3] != null && item[4] != null) {
+                        if (item[0] != "" && item[3] != "" && item[4] != "") {
+                            if (item[0] != "0" && item[3] != "" && item[4] != "") {
+                                res[0] = item[0];
+                                res[1] = item[5];
+                                res[2] = item[3]
+                                res[3] = item[4];
+                                arrayData.push(res);
+                                validar_contenido = "1";
+                            }
+                        }
+                    }
+                });
+                if (proveedor == "") {
+                    if ($(".has-error").val() != "") {
+                        $('#cmbProveedor').closest('.proveedor').append("<span for='cmbProveedor' class='help-block'>Debe elegir un proveedor</span>").addClass('has-error');
+                    }
+                }
+                else {
+                    $.ajax({
+                        url: Routing.generate('compra_guardar'),
+                        dataType: 'json',
+                        type: 'POST',
+                        async: false,
+                        data: {
+                            "tipo": tipo,
+                            "data": arrayData,
+                            "idCompra": idCompra,
+                            "fecha": fecha,
+                            "proveedor": proveedor,
+                            "total": total
+                        },
+                        success: function (result) {
+                            $("#save").prop('disabled', true);
+                            window.location.href = "{{ path('compra_listar') }}";
+                        },
+                        error: function (xhr, textStatus, errorThrow) {
+                            $("#mensaje").html("<div class='alert alert-danger fade in'><button class='close' data-dismiss='alert'>×</button><i class='fa-fw fa fa-times'></i>" + xhr.responseJSON + "</div>");
+                        }
+                    });
+                }
+            });
         });
     </script>
 {% endblock %}
